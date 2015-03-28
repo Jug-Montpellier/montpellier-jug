@@ -8,7 +8,6 @@ import org.apache.felix.ipojo.annotations.Instantiate;
 import org.apache.felix.ipojo.annotations.Provides;
 import org.apache.felix.ipojo.annotations.Requires;
 import org.jug.montpellier.forms.apis.*;
-import org.jug.montpellier.forms.apis.Introspector;
 import org.jug.montpellier.forms.models.PropertyValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +35,7 @@ public class DefaultPropertySheet implements PropertySheet {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultPropertySheet.class);
 
     @Requires
-    Introspector introspector;
+    IntrospectorRegistry introspectorRegistry;
 
     @View("editors/propertysheet")
     Template template;
@@ -56,7 +55,7 @@ public class DefaultPropertySheet implements PropertySheet {
             List<PropertyValue> defs = Arrays.asList(object.getClass().getDeclaredFields()).stream().map((Field field) -> {
                 field.setAccessible(true);
                 try {
-                    return introspector.getPropertyValue(object, field.getName(), controller);
+                    return introspectorRegistry.getPropertyValue(object, field.getName(), controller);
                 } catch (NoSuchFieldException e) {
                     return null;
                 }

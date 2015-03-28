@@ -6,7 +6,7 @@ import org.apache.felix.ipojo.annotations.Instantiate;
 import org.apache.felix.ipojo.annotations.Provides;
 import org.apache.felix.ipojo.annotations.Requires;
 import org.jug.montpellier.forms.annotations.ListView;
-import org.jug.montpellier.forms.apis.Introspector;
+import org.jug.montpellier.forms.apis.IntrospectorRegistry;
 import org.jug.montpellier.forms.models.ListViewCell;
 import org.jug.montpellier.forms.models.ListViewRow;
 import org.jug.montpellier.forms.models.PropertyValue;
@@ -35,7 +35,7 @@ public class DefaultListView implements org.jug.montpellier.forms.apis.ListView 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultListView.class);
 
     @Requires
-    Introspector introspector;
+    IntrospectorRegistry introspectorRegistry;
 
     @View("editors/listview")
     Template template;
@@ -60,7 +60,7 @@ public class DefaultListView implements org.jug.montpellier.forms.apis.ListView 
                 row.cells = columns.stream().map((String column) -> {
                     ListViewCell cell = new ListViewCell();
                     try {
-                        PropertyValue propertyValue = introspector.getPropertyValue(object, column, controller);
+                        PropertyValue propertyValue = introspectorRegistry.getPropertyValue(object, column, controller);
                         cell.content = propertyValue.view;
                     } catch (NoSuchFieldException e) {
                         cell.content = "error";
