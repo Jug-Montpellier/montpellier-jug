@@ -15,4 +15,5 @@ public class PropertyValue {
     public boolean readonly = false;
     public String editorName;
     public String displayname;
+    public Object view;
 }

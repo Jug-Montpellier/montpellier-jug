@@ -6,9 +6,7 @@ import org.apache.felix.ipojo.annotations.Instantiate;
 import org.apache.felix.ipojo.annotations.Provides;
 import org.apache.felix.ipojo.annotations.Requires;
 import org.jug.montpellier.forms.annotations.ListView;
-import org.jug.montpellier.forms.annotations.Property;
-import org.jug.montpellier.forms.apis.Editor;
-import org.jug.montpellier.forms.apis.EditorRegistry;
+import org.jug.montpellier.forms.apis.Introspector;
 import org.jug.montpellier.forms.models.ListViewCell;
 import org.jug.montpellier.forms.models.ListViewRow;
 import org.jug.montpellier.forms.models.PropertyValue;
@@ -37,7 +35,8 @@ public class DefaultListView implements org.jug.montpellier.forms.apis.ListView 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultListView.class);
 
     @Requires
-    EditorRegistry editorRegistry;
+    Introspector introspector;
+
     @View("editors/listview")
     Template template;
 
@@ -53,28 +52,17 @@ public class DefaultListView implements org.jug.montpellier.forms.apis.ListView 
         List<ListViewRow> listViewRows = objects.stream().map((final T object) -> {
             ListViewRow row = new ListViewRow();
             try {
+                // Build id property when the user click
                 Field idField = object.getClass().getDeclaredField(annotation.id());
                 idField.setAccessible(true);
                 row.id = idField.get(object);
+                // Build cells data
                 row.cells = columns.stream().map((String column) -> {
                     ListViewCell cell = new ListViewCell();
                     try {
-                        Field field = object.getClass().getDeclaredField(column);
-                        field.setAccessible(true);
-                        Property property = field.getAnnotation(Property.class);
-                        Editor editor = editorRegistry.createEditor(field.get(object), field.getType(), property);
-                        if (editor != null) {
-                            PropertyValue propertyValue = new PropertyValue();
-                            propertyValue.name = field.getName();
-                            propertyValue.displayname = property != null && property.displayLabel() != null && !property.displayLabel().isEmpty() ? property.displayLabel() : field.getName();
-                            propertyValue.description = property != null && property.description() != null && !property.description().isEmpty() ? property.description() : "";
-                            propertyValue.value = editor.getValue();
-                            propertyValue.valueAsText = editor.getAsText();
-                            propertyValue.editorName = editor.service().getClass().getSimpleName().toLowerCase();
-                            propertyValue.visible = property != null ? property.visible() : propertyValue.visible;
-                            cell.content = editor.getView(controller, propertyValue).content();
-                        }
-                    } catch (NoSuchFieldException | ClassNotFoundException | IllegalAccessException e) {
+                        PropertyValue propertyValue = introspector.getPropertyValue(object, column, controller);
+                        cell.content = propertyValue.view;
+                    } catch (NoSuchFieldException e) {
                         cell.content = "error";
                     }
                     return cell;
@@ -85,14 +73,11 @@ public class DefaultListView implements org.jug.montpellier.forms.apis.ListView 
             return row;
         }).collect(Collectors.toList());
 
-        List<String> labels = Arrays.asList(annotation.labels());
-
-
         Map<String, Object> parameters = Maps.newHashMap(additionnalParameters);
         parameters.put("title", annotation.title());
         parameters.put("hasData", !listViewRows.isEmpty());
         parameters.put("rows", listViewRows);
-        parameters.put("labels", labels);
+        parameters.put("labels", Arrays.asList(annotation.labels()));
         return template.render(controller, parameters);
     }
 }
