@@ -2,12 +2,15 @@
     <div class="header">
         <h1>{{title}}</h1>
         <div id="search" class="input-group">
+            <span class="input-group-btn">
+                <button id="create-button" class="btn btn-success" type="button" onclick="create()">+</button>
+            </span>
             <input id="term" type="text" class="form-control" placeholder="Search for..." autofocus onFocus="this.select()" value="{{search}}">
           <span class="input-group-btn">
             <button id="search-button" class="btn btn-default" type="button" onclick="search()">Search</button>
           </span>
-            <button id="create-button" class="btn btn-default" type="button" onclick="create()">Create</button>
         </div>
+
     {{#hasData}}
     <table class="table table-hover listview">
         <thead>

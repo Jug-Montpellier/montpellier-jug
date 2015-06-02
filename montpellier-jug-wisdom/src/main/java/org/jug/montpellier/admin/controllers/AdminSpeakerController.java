@@ -19,30 +19,28 @@
  */
 package org.jug.montpellier.admin.controllers;
 
+import com.google.common.collect.Maps;
 import org.apache.felix.ipojo.annotations.Requires;
 import org.jooq.DSLContext;
 import org.jooq.SelectOrderByStep;
 import org.jooq.SelectWhereStep;
 import org.jug.montpellier.core.api.JugSupport;
-import org.jug.montpellier.forms.apis.ListView;
-import org.jug.montpellier.models.Speaker;
-import org.jug.montpellier.core.api.CartridgeSupport;
 import org.jug.montpellier.core.controller.JugController;
+import org.jug.montpellier.forms.apis.ListView;
 import org.jug.montpellier.forms.apis.PropertySheet;
-import org.jug.montpellier.models.Talk;
+import org.jug.montpellier.models.Speaker;
 import org.montpellierjug.store.jooq.Tables;
-import org.montpellierjug.store.jooq.tables.Event;
 import org.montpellierjug.store.jooq.tables.daos.SpeakerDao;
 import org.wisdom.api.annotations.*;
-import org.wisdom.api.annotations.Controller;
 import org.wisdom.api.http.HttpMethod;
 import org.wisdom.api.http.Result;
+import org.wisdom.api.router.Router;
 import org.wisdom.api.templates.Template;
 
 import java.beans.IntrospectionException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 @Controller
 @Path("/admin/speaker")
@@ -84,7 +82,9 @@ public class AdminSpeakerController extends JugController {
 
     @Route(method = HttpMethod.GET, uri = "/new/")
     public Result createSpeaker() throws InvocationTargetException, ClassNotFoundException, IntrospectionException, IllegalAccessException {
-        return template(template).withPropertySheet(propertySheet.getRenderable(this, new Speaker())).render();
+        Map<String, Object> additionalParameters = Maps.newHashMap();
+        additionalParameters.put("cancelRedirect", "..");
+        return template(template).withPropertySheet(propertySheet.getRenderable(this, new Speaker(), additionalParameters)).render();
     }
 
     @Route(method = HttpMethod.POST, uri = "/new/")

@@ -3,6 +3,7 @@ package org.jug.montpellier.models;
 import org.jug.montpellier.forms.annotations.Property;
 import org.jug.montpellier.forms.services.editors.extended.DateEditorService;
 import org.jug.montpellier.forms.services.editors.extended.WebSiteUrlEditorService;
+import org.jug.montpellier.forms.services.editors.specific.MultiSpeakerEditorService;
 import org.montpellierjug.store.jooq.tables.interfaces.IEvent;
 import org.montpellierjug.store.jooq.tables.interfaces.ISpeaker;
 import org.montpellierjug.store.jooq.tables.interfaces.ITalk;
@@ -23,13 +24,13 @@ public class Event implements IEvent {
     private Long id;
     @Property(displayLabel = "Capacity", description = "The number max of participants")
     private Integer capacity;
-    @Property(displayLabel = "Date", description = "The day of the event", editorService = DateEditorService.class)
+    @Property(visible=false, displayLabel = "Date", description = "The day of the event", editorService = DateEditorService.class)
     private Timestamp date;
     @Property(displayLabel = "Description")
     private String description;
     @Property(displayLabel = "Location")
     private String location;
-    @Property(displayLabel = "Map", description = "WTF ?")
+    @Property(displayLabel = "Map")
     private String map;
     @Property(visible = false)
     private Boolean open;
@@ -40,10 +41,12 @@ public class Event implements IEvent {
     @Property(displayLabel = "Title")
     private String title;
 
-    //TODO : set correct editor
-    @Property(displayLabel = "Speakers")
+    // TODO : fteychene work in progress
+    @Property(displayLabel = "Speakers", editorService = MultiSpeakerEditorService.class)
+    private List<Long> speakersId;
+    @Property(visible = false)
     private List<ISpeaker> speakers;
-    @Property(displayLabel = "Talks")
+    @Property(visible = false, displayLabel = "Talks")
     private List<ITalk> talks;
 
     @Override
@@ -166,6 +169,14 @@ public class Event implements IEvent {
     @Override
     public Long getPartnerId() {
         return null;
+    }
+
+    public List<Long> getSpeakersId() {
+        return speakersId;
+    }
+
+    public void setSpeakersId(List<Long> speakersId) {
+        this.speakersId = speakersId;
     }
 
     @Override

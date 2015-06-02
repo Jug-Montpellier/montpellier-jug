@@ -19,13 +19,13 @@
  */
 package org.jug.montpellier.admin.controllers;
 
+import com.google.common.collect.Maps;
 import org.apache.felix.ipojo.annotations.Requires;
-import org.jug.montpellier.core.api.CartridgeSupport;
 import org.jug.montpellier.core.api.JugSupport;
 import org.jug.montpellier.core.controller.JugController;
 import org.jug.montpellier.forms.apis.ListView;
 import org.jug.montpellier.forms.apis.PropertySheet;
-import org.jug.montpellier.models.Speaker;
+import org.jug.montpellier.models.Event;
 import org.jug.montpellier.models.Talk;
 import org.montpellierjug.store.jooq.tables.daos.TalkDao;
 import org.wisdom.api.annotations.*;
@@ -36,6 +36,7 @@ import org.wisdom.api.templates.Template;
 import java.beans.IntrospectionException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @Path("/admin/talk")
@@ -63,17 +64,41 @@ public class AdminTalkController extends JugController {
         return template(template).withListview(listView.getRenderable(this, talks, Talk.class)).render();
     }
 
-
     @Route(method = HttpMethod.GET, uri = "/{id}")
     public Result get(@Parameter("id") Long id) throws InvocationTargetException, ClassNotFoundException, IntrospectionException, IllegalAccessException {
         Talk editedTalk = Talk.build(talkDao.findById(id));
         return template(template).withPropertySheet(propertySheet.getRenderable(this, editedTalk)).render();
     }
 
-    @Route(method = HttpMethod.POST, uri = "/{id}")
-    public Result saveSpeaker(@Parameter("id") Long id, @Body Talk talk) throws InvocationTargetException, ClassNotFoundException, IntrospectionException, IllegalAccessException {
+    @Route(method = HttpMethod.GET, uri="/new/")
+    public Result createTalk() throws ClassNotFoundException, IntrospectionException, IllegalAccessException, InvocationTargetException {
+        Map<String, Object> additionalParameters = Maps.newHashMap();
+        additionalParameters.put("cancelRedirect", "..");
+        return template(template).withPropertySheet(propertySheet.getRenderable(this, new Talk(), additionalParameters)).render();
+    }
+
+    @Route(method=HttpMethod.POST, uri="/new/")
+    public Result saveNewTalk(@Body Talk talk) {
         talkDao.update(talk.into(new org.montpellierjug.store.jooq.tables.pojos.Talk()));
-        return redirect("/admin/talk/" + id);
+        return redirect("..");
+    }
+
+    @Route(method = HttpMethod.POST, uri = "/{id}")
+    public Result saveTalk(@Parameter("id") Long id, @Body Talk talk) throws InvocationTargetException, ClassNotFoundException, IntrospectionException, IllegalAccessException {
+        talkDao.update(talk.into(new org.montpellierjug.store.jooq.tables.pojos.Talk()));
+        return redirect(".");
+    }
+
+    @Route(method = HttpMethod.GET, uri="/fruit/")
+    public Result test() throws ClassNotFoundException, IntrospectionException, IllegalAccessException, InvocationTargetException {
+
+        return template(template).withPropertySheet(propertySheet.getRenderable(this, new Event())).render();
+    }
+
+    @Route(method = HttpMethod.POST, uri="/fruit/")
+    public Result testPost(@Body Event test) {
+
+        return redirect(".");
     }
 
 }

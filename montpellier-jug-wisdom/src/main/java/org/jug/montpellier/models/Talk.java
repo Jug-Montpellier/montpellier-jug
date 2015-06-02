@@ -27,6 +27,7 @@ public class Talk implements ITalk {
     private String teaser;
     @Property(displayLabel = "Start time")
     private String datetime;
+    @Property(visible = false)
     private Long eventid;
     private Integer orderinevent;
     @Property(displayLabel = "Speaker", editorService = SpeakerChooserEditorService.class)

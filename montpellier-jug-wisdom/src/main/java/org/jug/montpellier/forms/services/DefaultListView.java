@@ -1,5 +1,6 @@
 package org.jug.montpellier.forms.services;
 
+import com.google.common.collect.Maps;
 import org.apache.felix.ipojo.annotations.Component;
 import org.apache.felix.ipojo.annotations.Instantiate;
 import org.apache.felix.ipojo.annotations.Provides;
@@ -42,6 +43,11 @@ public class DefaultListView implements org.jug.montpellier.forms.apis.ListView 
 
     @Override
     public <T extends Object> Renderable getRenderable(Controller controller, List<T> objects, Class<T> objectClass) throws Exception {
+        return getRenderable(controller, objects, objectClass, Maps.newHashMap());
+    }
+
+    @Override
+    public <T> Renderable getRenderable(Controller controller, List<T> objects, Class<T> objectClass, Map<String, Object> additionnalParameters) throws Exception {
         ListView annotation = objectClass.getAnnotation(ListView.class);
         List<String> columns = Arrays.asList(annotation.columns());
         List<ListViewRow> listViewRows = objects.stream().map((final T object) -> {
@@ -82,12 +88,11 @@ public class DefaultListView implements org.jug.montpellier.forms.apis.ListView 
         List<String> labels = Arrays.asList(annotation.labels());
 
 
-        Map<String, Object> parameters = new HashMap<>();
+        Map<String, Object> parameters = Maps.newHashMap(additionnalParameters);
         parameters.put("title", annotation.title());
         parameters.put("hasData", !listViewRows.isEmpty());
         parameters.put("rows", listViewRows);
         parameters.put("labels", labels);
         return template.render(controller, parameters);
     }
-
 }

@@ -1,0 +1,17 @@
+<!-- Liste de valeurs de la liste -->
+<div id="{{property.name}}_list">
+{{#property.value}}
+<input name="{{property.name}}" type="checkbox" class="form-control" value="{{.}}" >{{.}}
+{{/property.value}}
+</div>
+<!-- Ajout nouvelle possibilité -->
+<input id="{{property.name}}_newInput" />
+<button class="btn btn-success" type="button" onclick="{{property.name}}NewValue();">+</button>
+<script type="text/javascript">
+function {{property.name}}NewValue() {
+    var el = document.getElementById("{{property.name}}_newInput");
+    var value = el.value;
+    document.getElementById("{{property.name}}_list").innerHTML += '<input name="{{property.name}}" type="checkbox" class="form-control" value="'+value+'" >'+value;
+    el.value = '';
+}
+</script>
