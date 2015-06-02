@@ -29,6 +29,7 @@ import org.jug.montpellier.models.Speaker;
 import org.jug.montpellier.core.api.CartridgeSupport;
 import org.jug.montpellier.core.controller.JugController;
 import org.jug.montpellier.forms.apis.PropertySheet;
+import org.jug.montpellier.models.Talk;
 import org.montpellierjug.store.jooq.Tables;
 import org.montpellierjug.store.jooq.tables.Event;
 import org.montpellierjug.store.jooq.tables.daos.SpeakerDao;
@@ -71,7 +72,7 @@ public class AdminSpeakerController extends JugController {
             selectStep = ((SelectWhereStep)selectStep).where(org.montpellierjug.store.jooq.tables.Speaker.SPEAKER.FULLNAME.likeIgnoreCase("%"+search+"%"));
         }
         List<Speaker> speakers = selectStep.orderBy(org.montpellierjug.store.jooq.tables.Speaker.SPEAKER.FULLNAME.asc()).fetchInto(Speaker.class);
-        return template(template).withListview(listView.getRenderable(this, speakers, Speaker.class)).withParam("search", search).render();
+        return template(template).withListview(listView.getRenderable(this, speakers, Speaker.class)).withParam("title", "Speakers").withParam("search", search).render();
     }
 
 
@@ -79,8 +80,19 @@ public class AdminSpeakerController extends JugController {
     public Result speaker(@Parameter("id") Long id) throws InvocationTargetException, ClassNotFoundException, IntrospectionException, IllegalAccessException {
         Speaker editedSpeaker = Speaker.build(speakerDao.findById(id));
         return template(template).withPropertySheet(propertySheet.getRenderable(this, editedSpeaker)).render();
-
     }
+
+    @Route(method = HttpMethod.GET, uri = "/new/")
+    public Result createSpeaker() throws InvocationTargetException, ClassNotFoundException, IntrospectionException, IllegalAccessException {
+        return template(template).withPropertySheet(propertySheet.getRenderable(this, new Speaker())).render();
+    }
+
+    @Route(method = HttpMethod.POST, uri = "/new/")
+    public Result saveNewSpeaker(@Body Speaker speaker) {
+        speakerDao.insert(speaker.into(new org.montpellierjug.store.jooq.tables.pojos.Speaker()));
+        return redirect("..");
+    }
+
 
     @Route(method = HttpMethod.POST, uri = "/{id}")
     public Result saveSpeaker(@Parameter("id") Long id, @Body Speaker speaker) throws InvocationTargetException, ClassNotFoundException, IntrospectionException, IllegalAccessException {

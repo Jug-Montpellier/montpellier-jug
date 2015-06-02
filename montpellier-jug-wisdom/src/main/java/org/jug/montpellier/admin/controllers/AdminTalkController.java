@@ -23,6 +23,7 @@ import org.apache.felix.ipojo.annotations.Requires;
 import org.jug.montpellier.core.api.CartridgeSupport;
 import org.jug.montpellier.core.api.JugSupport;
 import org.jug.montpellier.core.controller.JugController;
+import org.jug.montpellier.forms.apis.ListView;
 import org.jug.montpellier.forms.apis.PropertySheet;
 import org.jug.montpellier.models.Speaker;
 import org.jug.montpellier.models.Talk;
@@ -34,6 +35,7 @@ import org.wisdom.api.templates.Template;
 
 import java.beans.IntrospectionException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 @Controller
 @Path("/admin/talk")
@@ -46,6 +48,9 @@ public class AdminTalkController extends JugController {
     PropertySheet propertySheet;
 
     @Requires
+    ListView listView;
+
+    @Requires
     TalkDao talkDao;
 
     public AdminTalkController(@Requires JugSupport jugSupport) {
@@ -53,16 +58,16 @@ public class AdminTalkController extends JugController {
     }
 
     @Route(method = HttpMethod.GET, uri = "/")
-    public Result home() {
-        return template(template).render();
+    public Result home() throws Exception {
+        List<Talk> talks = Talk.build(talkDao.findAll().stream().sorted((p1, p2) -> p1.getOrderinevent().compareTo(p2.getOrderinevent())));
+        return template(template).withListview(listView.getRenderable(this, talks, Talk.class)).render();
     }
 
 
     @Route(method = HttpMethod.GET, uri = "/{id}")
-    public Result speaker(@Parameter("id") Long id) throws InvocationTargetException, ClassNotFoundException, IntrospectionException, IllegalAccessException {
+    public Result get(@Parameter("id") Long id) throws InvocationTargetException, ClassNotFoundException, IntrospectionException, IllegalAccessException {
         Talk editedTalk = Talk.build(talkDao.findById(id));
         return template(template).withPropertySheet(propertySheet.getRenderable(this, editedTalk)).render();
-
     }
 
     @Route(method = HttpMethod.POST, uri = "/{id}")

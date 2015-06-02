@@ -23,7 +23,7 @@ public class AdminCartridge implements Cartridge {
 
     @Override
     public String routeUri() {
-        return router.getReverseRouteFor(AdminSpeakerController.class, "home");
+        return router.getReverseRouteFor(AdminSpeakerController.class, "all");
     }
 
     @Override

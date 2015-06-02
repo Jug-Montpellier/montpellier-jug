@@ -1,5 +1,6 @@
 package org.jug.montpellier.models;
 
+import org.jug.montpellier.forms.annotations.ListView;
 import org.jug.montpellier.forms.annotations.Property;
 import org.jug.montpellier.forms.services.editors.extended.BigStringEditorService;
 import org.jug.montpellier.forms.services.editors.specific.SpeakerChooserEditorService;
@@ -7,11 +8,15 @@ import org.montpellierjug.store.jooq.tables.interfaces.IEvent;
 import org.montpellierjug.store.jooq.tables.interfaces.ISpeaker;
 import org.montpellierjug.store.jooq.tables.interfaces.ITalk;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by Eric Taix on 21/03/2015.
  */
+@ListView(title = "Talks", labels = {"Date", "Titre"}, columns = {"datetime", "title"})
 public class Talk implements ITalk {
 
     @Property(visible = false)
@@ -33,6 +38,14 @@ public class Talk implements ITalk {
         Talk talk = new Talk();
         talk.from(from);
         return talk;
+    }
+
+    public static <T extends ITalk> List<Talk> build(Stream<T> from) {
+        return from.map((ITalk elem) -> build(elem)).collect(Collectors.toList());
+    }
+
+    public static <T extends ITalk> List<Talk> build(List<T> from) {
+        return build(from.stream());
     }
 
     @Override

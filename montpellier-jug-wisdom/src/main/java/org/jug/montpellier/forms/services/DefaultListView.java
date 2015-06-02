@@ -83,6 +83,7 @@ public class DefaultListView implements org.jug.montpellier.forms.apis.ListView 
 
 
         Map<String, Object> parameters = new HashMap<>();
+        parameters.put("title", annotation.title());
         parameters.put("hasData", !listViewRows.isEmpty());
         parameters.put("rows", listViewRows);
         parameters.put("labels", labels);

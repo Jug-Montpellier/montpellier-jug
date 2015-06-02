@@ -74,7 +74,7 @@ public class JugSupportImpl implements JugSupport {
 
     @Bind(specification = Cartridge.class, aggregate = true)
     public void bindCartridges(Cartridge cartridge) {
-        LOG.info("Adding cratridge " + cartridge);
+        LOG.info("Adding cartridge " + cartridge);
         if (cartridge != null) {
             cartridges.add(cartridge);
         }
@@ -82,7 +82,7 @@ public class JugSupportImpl implements JugSupport {
 
     @Unbind(specification = Cartridge.class, aggregate = true)
     public void unbindCartridges(Cartridge cartridge) {
-        LOG.info("Removing cratridge " + cartridge);
+        LOG.info("Removing cartridge " + cartridge);
         if (cartridge != null) {
             cartridges.remove(cartridge);
         }

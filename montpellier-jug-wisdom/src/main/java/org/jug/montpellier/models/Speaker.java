@@ -10,7 +10,7 @@ import org.montpellierjug.store.jooq.tables.interfaces.ISpeaker;
 /**
  * Created by Eric Taix on 09/03/2015.
  */
-@ListView(labels = {"", "Name", "Company", "Email"}, columns = {"photourl", "fullname","compan", "email"})
+@ListView(title = "Speakers", labels = {"", "Name", "Company", "Email"}, columns = {"photourl", "fullname","compan", "email"})
 public class Speaker implements ISpeaker {
 
     @Property(visible = false)
