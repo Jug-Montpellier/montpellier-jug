@@ -1,0 +1,24 @@
+listview:
+  idProperty: id
+  labels: Title
+  columns: title
+properties:
+  id:
+    visible: false
+  capacity:
+    displayLabel: Capacity
+  title:
+    displayLabel: Title
+  date:
+    displayLabel: Date of Event
+    editorService: DateEditorService.class
+  description:
+    displayLabel: The Teaser
+    editorService: BigStringEditorService.class
+  open:
+    displayLabel: Open?
+    description: Open the event when it has been already created on EventBrite
+  registrationUrl:
+    displayLabel: Registration URL
+    editorService: WebSiteUrlEditorService.class
+
