@@ -3,9 +3,9 @@
     {{#property.value}}
     <div class="checkbox">
         <label>
-            <input name="{{property.name}}" type="checkbox" value="{{.}}" checked>
+            <input name="{{property.name}}" type="checkbox" value="{{id}}" checked>
         </label>
-        {{.}}
+        {{fullName}}
     </div>
     {{/property.value}}
 </div>
@@ -15,20 +15,23 @@
     <select id="{{property.name}}_newInput" class="form-control">
         <option></option>
         {{#speakers}}
-        <option {{#selected}}selected{{/selected}} value="{{id}}">{{fullname}}</option>
+        <option value="{{id}}">{{fullname}}</option>
         {{/speakers}}
     </select>
     <span class="input-group-btn">
-        <button class="btn btn-success" type="button" onclick="{{property.name}}NewValue();">+</button>
+        <button class="btn btn-default" type="button" onclick="{{property.name}}NewValue();">+</button>
     </span>
 </div>
 
 <script type="text/javascript">
 function {{property.name}}NewValue() {
     var el = document.getElementById("{{property.name}}_newInput");
-    var value = el.value;
-    var text = el.options[el.selectedIndex].text;
-    document.getElementById("{{property.name}}_list").innerHTML += '<div class="checkbox"><label><input name="{{property.name}}" type="checkbox" value="'+value+'" checked ></label>'+text+'</div>';
+
+    var newElement = document.createElement('div');
+    newElement.className = 'checkbox';
+    newElement.innerHTML = '<label><input name="{{property.name}}" type="checkbox" value="'+el.value+'" checked ></label>'+el.options[el.selectedIndex].text;
+
+    document.getElementById("{{property.name}}_list").appendChild(newElement);
     el.value = '';
 }
 </script>

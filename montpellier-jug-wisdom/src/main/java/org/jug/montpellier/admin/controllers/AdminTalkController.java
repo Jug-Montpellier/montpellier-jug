@@ -19,6 +19,7 @@
  */
 package org.jug.montpellier.admin.controllers;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.felix.ipojo.annotations.Requires;
 import org.jug.montpellier.core.api.JugSupport;
@@ -91,8 +92,10 @@ public class AdminTalkController extends JugController {
 
     @Route(method = HttpMethod.GET, uri="/fruit/")
     public Result test() throws ClassNotFoundException, IntrospectionException, IllegalAccessException, InvocationTargetException {
+        Event test = new Event();
 
-        return template(template).withPropertySheet(propertySheet.getRenderable(this, new Event())).render();
+        test.setSpeakersId(Lists.newArrayList(23L, 3L));
+        return template(template).withPropertySheet(propertySheet.getRenderable(this, test)).render();
     }
 
     @Route(method = HttpMethod.POST, uri="/fruit/")
