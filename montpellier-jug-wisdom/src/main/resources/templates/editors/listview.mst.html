@@ -1,43 +1,53 @@
 <div class="listview-container panel panel-default">
     <div class="header">
-        <h1>Speakers</h1>
+        <h1>{{title}}</h1>
+
         <div id="search" class="input-group">
-            <input id="term" type="text" class="form-control" placeholder="Search for..." autofocus onFocus="this.select()" value="{{search}}">
+            <input id="term" type="text" class="form-control" placeholder="Search for..." autofocus
+                   onFocus="this.select()" value="{{search}}">
           <span class="input-group-btn">
             <button id="search-button" class="btn btn-default" type="button" onclick="search()">Search</button>
           </span>
+
         </div>
+        <span class="input-group-btn">
+            <button id="create-button" class="btn btn-primary" type="button" onclick="create()">Create</button>
+        </span>
+
+        {{#hasData}}
+        <table class="table table-hover listview">
+            <thead>
+            <tr>
+                {{#labels}}
+                <th>{{.}}</th>
+                {{/labels}}
+            </tr>
+            </thead>
+            <tbody>
+            {{#rows}}
+            <tr onclick="javascript:location.href='{{id}}'">
+                {{#cells}}
+                <td class="cell">{{{content}}}</td>
+                {{/cells}}
+            </tr>
+            {{/rows}}
+            </tbody>
+        </table>
+        {{/hasData}}
+        {{^hasData}}
+        <div class="no-result">
+            No result
+        </div>
+        {{/hasData}}
     </div>
-    {{#hasData}}
-    <table class="table table-hover listview">
-        <thead>
-        <tr>
-            {{#labels}}
-            <th>{{.}}</th>
-            {{/labels}}
-        </tr>
-        </thead>
-        <tbody>
-        {{#rows}}
-        <tr onclick="javascript:location.href='{{id}}'">
-            {{#cells}}
-            <td class="cell">{{{content}}}</td>
-            {{/cells}}
-        </tr>
-        {{/rows}}
-        </tbody>
-    </table>
-    {{/hasData}}
-    {{^hasData}}
-    <div class="no-result">
-        No result
-    </div>
-    {{/hasData}}
-</div>
-<script type="text/javascript">
+    <script type="text/javascript">
     function search() {
         var el = document.getElementById("term");
         location.href = "?search="+el.value;
+    }
+
+    function create() {
+        location.href = "new/"
     }
 
     if (document.layers) {
@@ -52,5 +62,8 @@
             return true;
         }
     };
-</script>
+
+
+
+    </script>
 

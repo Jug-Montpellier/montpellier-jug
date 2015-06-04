@@ -1,0 +1,7 @@
+<select name="{{property.name}}" class="form-control">
+    <option></option>
+    {{#speakers}}
+    <option {{#selected}}selected{{/selected}} value="{{id}}">{{title}}</option>
+    {{/speakers}}
+</select>
+

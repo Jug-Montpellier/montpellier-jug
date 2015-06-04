@@ -34,4 +34,6 @@ public @interface ListView {
      */
     String[] columns();
 
+    String title();
+
 }

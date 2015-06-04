@@ -1,39 +1,39 @@
-package org.jug.montpellier.forms.services.editors.extended;
+package org.jug.montpellier.forms.services.editors.specific;
 
 import org.apache.felix.ipojo.annotations.Component;
 import org.apache.felix.ipojo.annotations.Instantiate;
 import org.apache.felix.ipojo.annotations.Provides;
+import org.apache.felix.ipojo.annotations.Requires;
 import org.jug.montpellier.forms.apis.Editor;
 import org.jug.montpellier.forms.apis.EditorService;
-import org.jug.montpellier.forms.services.editors.base.TimestampAsDateEditor;
+import org.montpellierjug.store.jooq.tables.daos.TalkDao;
 import org.wisdom.api.annotations.View;
 import org.wisdom.api.templates.Template;
 
-import java.util.Date;
-
 /**
- * Created by Eric Taix on 08/03/2015.
+ * Created by fteychene on 04/06/2015.
  */
 @Component
 @Provides(specifications = EditorService.class)
 @Instantiate
-public class DateEditorService implements EditorService {
+public class MultiTalkEditorService implements EditorService {
 
-    @View("editors/extended/date")
-    Template editorTemplate;
-    @View("views/base/stringAsText")
-    Template viewTemplate;
+    @View("editors/specific/multitalkchooser")
+    private Template editorTemplate;
+    @View("views/specific/multitalkchooser")
+    private Template viewTemplate;
+    @Requires
+    private TalkDao talkDao;
 
     @Override
     public Class<? extends Object> getEditedType() {
-        return Date.class;
+        return null;
     }
 
     @Override
     public Editor createFormEditor(Object model) {
-        TimestampAsDateEditor editor = new TimestampAsDateEditor(editorTemplate,viewTemplate, this);
+        MultiTalkEditor editor = new MultiTalkEditor(editorTemplate, viewTemplate, this, talkDao);
         editor.setValue(model);
         return editor;
     }
-
 }

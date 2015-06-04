@@ -1,0 +1,28 @@
+<!-- Liste de valeurs de la liste -->
+<div id="{{property.name}}_list">
+    {{#property.value}}
+    <div class="checkbox">
+        <label>
+            <input name="{{property.name}}" type="checkbox" class="checkbox" value="{{.}}" checked/>
+            {{.}}
+        </label>
+    </div>
+    {{/property.value}}
+</div>
+
+<!-- Ajout nouvelle possibilité -->
+<div class="input-group">
+    <input id="{{property.name}}_newInput"/>
+    <span class="input-group-btn">
+        <button class="btn btn-success" type="button" onclick="{{property.name}}NewValue();">+</button>
+    </span>
+</div>
+
+<script type="text/javascript">
+function {{property.name}}NewValue() {
+    var el = document.getElementById("{{property.name}}_newInput");
+    var value = el.value;
+    document.getElementById("{{property.name}}_list").innerHTML += '<div class="checkbox"><input name="{{property.name}}" type="checkbox" class="checkbox" value="'+value+'" checked >'+value+'</label></div>';
+    el.value = '';
+}
+</script>

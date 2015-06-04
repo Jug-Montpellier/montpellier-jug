@@ -1,39 +1,38 @@
-package org.jug.montpellier.forms.services.editors.extended;
+package org.jug.montpellier.forms.services.editors.base;
 
 import org.apache.felix.ipojo.annotations.Component;
 import org.apache.felix.ipojo.annotations.Instantiate;
 import org.apache.felix.ipojo.annotations.Provides;
 import org.jug.montpellier.forms.apis.Editor;
 import org.jug.montpellier.forms.apis.EditorService;
-import org.jug.montpellier.forms.services.editors.base.TimestampAsDateEditor;
+import org.jug.montpellier.forms.models.PropertyValue;
+import org.wisdom.api.Controller;
 import org.wisdom.api.annotations.View;
+import org.wisdom.api.http.Renderable;
 import org.wisdom.api.templates.Template;
 
-import java.util.Date;
+import java.util.List;
 
 /**
- * Created by Eric Taix on 08/03/2015.
+ * Created by fteychene on 02/06/2015.
  */
 @Component
 @Provides(specifications = EditorService.class)
 @Instantiate
-public class DateEditorService implements EditorService {
+public class CheckboxEditorService implements EditorService {
 
-    @View("editors/extended/date")
+    @View("editors/base/checkbox")
     Template editorTemplate;
-    @View("views/base/stringAsText")
-    Template viewTemplate;
 
     @Override
     public Class<? extends Object> getEditedType() {
-        return Date.class;
+        return null;
     }
 
     @Override
     public Editor createFormEditor(Object model) {
-        TimestampAsDateEditor editor = new TimestampAsDateEditor(editorTemplate,viewTemplate, this);
+        CheckboxEditor editor = new CheckboxEditor(editorTemplate, this);
         editor.setValue(model);
         return editor;
     }
-
 }
