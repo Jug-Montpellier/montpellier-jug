@@ -1,16 +1,17 @@
 package org.jug.montpellier.forms.services.introspector;
 
-import org.apache.felix.ipojo.annotations.Component;
-import org.apache.felix.ipojo.annotations.Instantiate;
-import org.apache.felix.ipojo.annotations.Provides;
-import org.apache.felix.ipojo.annotations.Requires;
+import org.apache.felix.ipojo.annotations.*;
+import org.jug.montpellier.core.api.Cartridge;
 import org.jug.montpellier.forms.apis.Introspector;
 import org.jug.montpellier.forms.apis.IntrospectorRegistry;
 import org.jug.montpellier.forms.models.ListViewColumn;
 import org.jug.montpellier.forms.models.PropertyValue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.wisdom.api.Controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,8 +22,9 @@ import java.util.List;
 @Instantiate
 public class CompositeIntrospectorRegistry implements IntrospectorRegistry {
 
-    @Requires(specification = Introspector.class)
-    List<Introspector> introspectors;
+    private static final Logger LOG = LoggerFactory.getLogger(CompositeIntrospectorRegistry.class);
+
+    private List<Introspector> introspectors = new ArrayList<>();
 
     @Override
     public PropertyValue getPropertyValue(Object object, String propertyName, Controller controller) throws NoSuchFieldException {
@@ -55,5 +57,21 @@ public class CompositeIntrospectorRegistry implements IntrospectorRegistry {
                 return null;
             }
         })).reduce(null, (currentPropertyValue, propertyValue) -> currentPropertyValue != null ? currentPropertyValue : propertyValue);
+    }
+
+    @Bind(specification = Introspector.class, aggregate = true)
+    public void bindIntrospector(Introspector introspector) {
+        LOG.info("Adding introspector " + introspector);
+        if (introspector != null) {
+            introspectors.add(introspector);
+        }
+    }
+
+    @Unbind(specification = Introspector.class, aggregate = true)
+    public void unbindIntrospector(Introspector introspector) {
+        LOG.info("Removing introspector " + introspector);
+        if (introspector != null) {
+            introspectors.remove(introspector);
+        }
     }
 }

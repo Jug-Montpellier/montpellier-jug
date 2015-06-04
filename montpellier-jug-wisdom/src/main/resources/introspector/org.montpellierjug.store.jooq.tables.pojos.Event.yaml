@@ -1,7 +1,6 @@
 listview:
-  idProperty: id
-  labels: Title
-  columns: title
+  id: id
+  columns: title:Title|date:Date|open:Open?
 properties:
   id:
     visible: false

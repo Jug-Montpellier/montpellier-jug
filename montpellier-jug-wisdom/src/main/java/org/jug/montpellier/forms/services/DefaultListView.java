@@ -84,7 +84,7 @@ public class DefaultListView implements org.jug.montpellier.forms.apis.ListView 
         parameters.put("title", annotation.title());
         parameters.put("hasData", !listViewRows.isEmpty());
         parameters.put("rows", listViewRows);
-        parameters.put("labels", Arrays.asList(columns.stream().map(column -> column.getLabel()).collect(Collectors.toList())));
+        parameters.put("labels", columns.stream().map(column -> column.getLabel()).collect(Collectors.toList()));
         return template.render(controller, parameters);
     }
 }

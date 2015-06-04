@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @Component
 @Provides(specifications = Introspector.class)
 @Instantiate
-public class AnnotationIntrospector implements Introspector {
+public class AnnotationIntrospector extends AbstractIntrospector implements Introspector {
 
     private static final Logger LOG = LoggerFactory.getLogger(AnnotationIntrospector.class);
 
@@ -40,20 +40,8 @@ public class AnnotationIntrospector implements Introspector {
         try {
             Property property = field.getAnnotation(Property.class);
             if (property != null) {
-                Editor editor = editorRegistry.createEditor(field.get(object), field.getType(), property);
-                if (editor != null) {
-                    PropertyValue propertyValue = new PropertyValue();
-                    propertyValue.name = field.getName();
-                    propertyValue.displayname = property != null && property.displayLabel() != null && !property.displayLabel().isEmpty() ? property.displayLabel() : field.getName();
-                    propertyValue.description = property != null && property.description() != null && !property.description().isEmpty() ? property.description() : "";
-                    propertyValue.value = editor.getValue();
-                    propertyValue.valueAsText = editor.getAsText();
-                    propertyValue.editorName = editor.service().getClass().getSimpleName().toLowerCase();
-                    propertyValue.visible = property != null ? property.visible() : propertyValue.visible;
-                    propertyValue.editor = editor.getEditor(controller, propertyValue).content();
-                    propertyValue.view = editor.getView(controller, propertyValue).content();
-                    return propertyValue;
-                }
+                org.jug.montpellier.forms.models.Property prop = org.jug.montpellier.forms.models.Property.from(property);
+                return buildPropertyValue(object, field, prop, controller);
             }
         } catch (Exception ex) {
             LOG.warn("Unable to retrieve Editor for field " + field + " due to an error", ex);
@@ -79,5 +67,10 @@ public class AnnotationIntrospector implements Introspector {
     public String getIdProperty(Class<?> objectClass) {
         ListView annotation = objectClass.getAnnotation(ListView.class);
         return annotation != null ? annotation.id() : null;
+    }
+
+    @Override
+    public EditorRegistry getEditorRegistry() {
+        return editorRegistry;
     }
 }
