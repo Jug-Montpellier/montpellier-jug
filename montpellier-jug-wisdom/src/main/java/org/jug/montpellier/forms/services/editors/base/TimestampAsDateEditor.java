@@ -38,9 +38,7 @@ public class TimestampAsDateEditor extends BaseEditor implements Editor {
     @Override
     public String getAsText() {
         // A valid full-date as defined in [RFC 3339] - ie input type='date'
-        if(value == null)
-            return "";
-        return new SimpleDateFormat("yyyy-MM-dd").format(value);
+        return value == null ? "" : new SimpleDateFormat("yyyy-MM-dd").format(value);
     }
 
     @Override
