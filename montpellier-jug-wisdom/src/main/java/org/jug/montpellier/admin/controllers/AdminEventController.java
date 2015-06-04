@@ -10,16 +10,15 @@ import org.jug.montpellier.core.controller.JugController;
 import org.jug.montpellier.forms.apis.ListView;
 import org.jug.montpellier.forms.apis.PropertySheet;
 import org.jug.montpellier.models.Event;
-import org.jug.montpellier.models.Speaker;
-import org.jug.montpellier.models.Talk;
 import org.montpellierjug.store.jooq.Tables;
 import org.montpellierjug.store.jooq.tables.daos.EventDao;
-import org.montpellierjug.store.jooq.tables.daos.SpeakerDao;
-import org.montpellierjug.store.jooq.tables.daos.TalkDao;
 import org.wisdom.api.annotations.*;
 import org.wisdom.api.http.HttpMethod;
 import org.wisdom.api.http.Result;
+import org.wisdom.api.security.Authenticated;
 import org.wisdom.api.templates.Template;
+import org.wisdom.oauth2.OAuth2WisdomAuthenticator;
+import org.wisdom.oauth2.controller.Role;
 
 import java.beans.IntrospectionException;
 import java.lang.reflect.InvocationTargetException;
@@ -31,6 +30,7 @@ import java.util.Map;
  */
 @Controller
 @Path("/admin/event")
+@Authenticated(OAuth2WisdomAuthenticator.NAME)
 public class AdminEventController extends JugController {
 
     @View("admin")
@@ -52,6 +52,7 @@ public class AdminEventController extends JugController {
         super(jugSupport);
     }
 
+    @Role("admin")
     @Route(method = HttpMethod.GET, uri = "/")
     public Result home(@QueryParameter("search") String search) throws Exception {
         SelectOrderByStep selectStep = dslContext.selectFrom(Tables.EVENT);
@@ -62,19 +63,21 @@ public class AdminEventController extends JugController {
         return template(template).withListview(listView.getRenderable(this, events, Event.class)).render();
     }
 
+    @Role("admin")
     @Route(method = HttpMethod.GET, uri = "/{id}")
     public Result get(@Parameter("id") Long id) throws InvocationTargetException, ClassNotFoundException, IntrospectionException, IllegalAccessException {
         Event editedTalk = Event.build(eventDao.findById(id));
         return template(template).withPropertySheet(propertySheet.getRenderable(this, editedTalk)).render();
     }
 
-
+    @Role("admin")
     @Route(method = HttpMethod.POST, uri = "/{id}")
     public Result saveTalk(@Parameter("id") Long id, @Body Event event) throws InvocationTargetException, ClassNotFoundException, IntrospectionException, IllegalAccessException {
         eventDao.update(event.into(new org.montpellierjug.store.jooq.tables.pojos.Event()));
         return redirect(".");
     }
 
+    @Role("admin")
     @Route(method = HttpMethod.GET, uri = "/new/")
     public Result createTalk() throws ClassNotFoundException, IntrospectionException, IllegalAccessException, InvocationTargetException {
         Map<String, Object> additionalParameters = Maps.newHashMap();
@@ -82,6 +85,7 @@ public class AdminEventController extends JugController {
         return template(template).withPropertySheet(propertySheet.getRenderable(this, new Event(), additionalParameters)).render();
     }
 
+    @Role("admin")
     @Route(method = HttpMethod.POST, uri = "/new/")
     public Result saveNewTalk(@Body Event event) {
         eventDao.update(event.into(new org.montpellierjug.store.jooq.tables.pojos.Event()));

@@ -35,7 +35,7 @@ public class IntegerEditor extends BaseEditor implements Editor {
 
     @Override
     public String getAsText() {
-        return value.toString();
+        return value == null ? "" : value.toString();
     }
 
     @Override

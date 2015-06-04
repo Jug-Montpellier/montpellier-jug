@@ -19,7 +19,6 @@
  */
 package org.jug.montpellier.admin.controllers;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.felix.ipojo.annotations.Requires;
 import org.jooq.DSLContext;
@@ -29,16 +28,16 @@ import org.jug.montpellier.core.api.JugSupport;
 import org.jug.montpellier.core.controller.JugController;
 import org.jug.montpellier.forms.apis.ListView;
 import org.jug.montpellier.forms.apis.PropertySheet;
-import org.jug.montpellier.models.Event;
-import org.jug.montpellier.models.News;
-import org.jug.montpellier.models.Speaker;
 import org.jug.montpellier.models.Talk;
 import org.montpellierjug.store.jooq.Tables;
 import org.montpellierjug.store.jooq.tables.daos.TalkDao;
 import org.wisdom.api.annotations.*;
 import org.wisdom.api.http.HttpMethod;
 import org.wisdom.api.http.Result;
+import org.wisdom.api.security.Authenticated;
 import org.wisdom.api.templates.Template;
+import org.wisdom.oauth2.OAuth2WisdomAuthenticator;
+import org.wisdom.oauth2.controller.Role;
 
 import java.beans.IntrospectionException;
 import java.lang.reflect.InvocationTargetException;
@@ -47,6 +46,7 @@ import java.util.Map;
 
 @Controller
 @Path("/admin/talk")
+@Authenticated(OAuth2WisdomAuthenticator.NAME)
 public class AdminTalkController extends JugController {
 
     @View("admin")
@@ -68,6 +68,7 @@ public class AdminTalkController extends JugController {
         super(jugSupport);
     }
 
+    @Role("admin")
     @Route(method = HttpMethod.GET, uri = "/")
     public Result home(@QueryParameter("search") String search) throws Exception {
         SelectOrderByStep selectStep = dslContext.selectFrom(Tables.TALK);
@@ -79,12 +80,21 @@ public class AdminTalkController extends JugController {
         return template(template).withListview(listView.getRenderable(this, talks, Talk.class)).render();
     }
 
+    @Role("admin")
     @Route(method = HttpMethod.GET, uri = "/{id}")
     public Result get(@Parameter("id") Long id) throws InvocationTargetException, ClassNotFoundException, IntrospectionException, IllegalAccessException {
         Talk editedTalk = Talk.build(talkDao.findById(id));
         return template(template).withPropertySheet(propertySheet.getRenderable(this, editedTalk)).render();
     }
 
+    @Role("admin")
+    @Route(method = HttpMethod.POST, uri = "/{id}")
+    public Result saveTalk(@Parameter("id") Long id, @Body Talk talk) throws InvocationTargetException, ClassNotFoundException, IntrospectionException, IllegalAccessException {
+        talkDao.update(talk.into(new org.montpellierjug.store.jooq.tables.pojos.Talk()));
+        return redirect(".");
+    }
+
+    @Role("admin")
     @Route(method = HttpMethod.GET, uri = "/new/")
     public Result createTalk() throws ClassNotFoundException, IntrospectionException, IllegalAccessException, InvocationTargetException {
         Map<String, Object> additionalParameters = Maps.newHashMap();
@@ -92,44 +102,11 @@ public class AdminTalkController extends JugController {
         return template(template).withPropertySheet(propertySheet.getRenderable(this, new Talk(), additionalParameters)).render();
     }
 
+    @Role("admin")
     @Route(method = HttpMethod.POST, uri = "/new/")
     public Result saveNewTalk(@Body Talk talk) {
         talkDao.update(talk.into(new org.montpellierjug.store.jooq.tables.pojos.Talk()));
         return redirect("..");
-    }
-
-    @Route(method = HttpMethod.POST, uri = "/{id}")
-    public Result saveTalk(@Parameter("id") Long id, @Body Talk talk) throws InvocationTargetException, ClassNotFoundException, IntrospectionException, IllegalAccessException {
-        talkDao.update(talk.into(new org.montpellierjug.store.jooq.tables.pojos.Talk()));
-        return redirect(".");
-    }
-
-    @Route(method = HttpMethod.GET, uri = "/fruit/")
-    public Result test() throws ClassNotFoundException, IntrospectionException, IllegalAccessException, InvocationTargetException {
-        Event test = new Event();
-
-        Speaker speaker1 = new Speaker();
-        speaker1.setId(23L);
-        speaker1.setFullname("Francois Teychene");
-        Speaker speaker2 = new Speaker();
-        speaker2.setId(3L);
-        speaker2.setFullname("Arnaud Casteltort");
-        test.setSpeakers(Lists.newArrayList(speaker1, speaker2));
-
-        Talk talk1 = new Talk();
-        talk1.setId(3L);
-        talk1.setTitle("Introduction");
-        Talk talk2 = new Talk();
-        talk2.setId(4L);
-        talk2.setTitle("Introduction soirée Android");
-        test.setTalks(Lists.newArrayList(talk1, talk2));
-        return template(template).withPropertySheet(propertySheet.getRenderable(this, test)).render();
-    }
-
-    @Route(method = HttpMethod.POST, uri = "/fruit/")
-    public Result testPost(@Body Event test) {
-
-        return redirect(".");
     }
 
 }
