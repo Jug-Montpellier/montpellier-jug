@@ -1,9 +1,12 @@
 package org.jug.montpellier.models;
 
+import org.jug.montpellier.forms.annotations.ListView;
 import org.jug.montpellier.forms.annotations.Property;
+import org.jug.montpellier.forms.services.editors.extended.BigStringEditorService;
 import org.jug.montpellier.forms.services.editors.extended.DateEditorService;
 import org.jug.montpellier.forms.services.editors.extended.WebSiteUrlEditorService;
 import org.jug.montpellier.forms.services.editors.specific.MultiSpeakerEditorService;
+import org.jug.montpellier.forms.services.editors.specific.MultiTalkEditorService;
 import org.montpellierjug.store.jooq.tables.interfaces.IEvent;
 import org.montpellierjug.store.jooq.tables.interfaces.ISpeaker;
 import org.montpellierjug.store.jooq.tables.interfaces.ITalk;
@@ -14,19 +17,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by manland on 26/04/15.
  */
+@ListView(title = "Events", labels = {"Title", "Date"}, columns = {"title", "date"})
 public class Event implements IEvent {
 
     @Property(visible = false)
     private Long id;
+    @Property(displayLabel = "Title")
+    private String title;
+    @Property(displayLabel = "Date", description = "The day of the event", editorService = DateEditorService.class)
+    private Timestamp date;
     @Property(displayLabel = "Capacity", description = "The number max of participants")
     private Integer capacity;
-    @Property(visible=false, displayLabel = "Date", description = "The day of the event", editorService = DateEditorService.class)
-    private Timestamp date;
-    @Property(displayLabel = "Description")
+    @Property(displayLabel = "Description", editorService = BigStringEditorService.class)
     private String description;
     @Property(displayLabel = "Location")
     private String location;
@@ -38,15 +45,12 @@ public class Event implements IEvent {
     private String registrationurl;
     @Property(displayLabel = "Report", description = "Tell if the event was a success or not")
     private String report;
-    @Property(displayLabel = "Title")
-    private String title;
 
-    // TODO : fteychene work in progress
-    @Property(displayLabel = "Speakers", editorService = MultiSpeakerEditorService.class)
-    private List<Long> speakersId;
+//    @Property(displayLabel = "Speakers", editorService = MultiSpeakerEditorService.class)
     @Property(visible = false)
     private List<ISpeaker> speakers;
-    @Property(visible = false, displayLabel = "Talks")
+//    @Property(displayLabel = "Talks", editorService = MultiTalkEditorService.class)
+    @Property(visible = false)
     private List<ITalk> talks;
 
     @Override
@@ -171,14 +175,6 @@ public class Event implements IEvent {
         return null;
     }
 
-    public List<Long> getSpeakersId() {
-        return speakersId;
-    }
-
-    public void setSpeakersId(List<Long> speakersId) {
-        this.speakersId = speakersId;
-    }
-
     @Override
     public void from(IEvent from) {
         setCapacity(from.getCapacity());
@@ -235,12 +231,12 @@ public class Event implements IEvent {
         return event;
     }
 
-    public static List<Event> build(List<IEvent> eventsPojo) {
-        List<Event> events = new ArrayList<>();
-        for(IEvent eventPojo : eventsPojo) {
-            events.add(Event.build(eventPojo));
-        }
-        return events;
+    public static <T extends IEvent> List<Event> build(Stream<T> from) {
+        return from.map((IEvent elem) -> build(elem)).collect(Collectors.toList());
+    }
+
+    public static <T extends IEvent> List<Event> build(List<T> from) {
+        return build(from.stream());
     }
 
     public static Event build(IEvent ievent, List<ISpeaker> speakers) {

@@ -3,6 +3,7 @@ package org.jug.montpellier.models;
 import org.jug.montpellier.forms.annotations.ListView;
 import org.jug.montpellier.forms.annotations.Property;
 import org.jug.montpellier.forms.services.editors.extended.BigStringEditorService;
+import org.jug.montpellier.forms.services.editors.specific.EventChooserEditorService;
 import org.jug.montpellier.forms.services.editors.specific.SpeakerChooserEditorService;
 import org.montpellierjug.store.jooq.tables.interfaces.IEvent;
 import org.montpellierjug.store.jooq.tables.interfaces.ISpeaker;
@@ -27,7 +28,7 @@ public class Talk implements ITalk {
     private String teaser;
     @Property(displayLabel = "Start time")
     private String datetime;
-    @Property(visible = false)
+    @Property(displayLabel = "Event", editorService = EventChooserEditorService.class)
     private Long eventid;
     private Integer orderinevent;
     @Property(displayLabel = "Speaker", editorService = SpeakerChooserEditorService.class)

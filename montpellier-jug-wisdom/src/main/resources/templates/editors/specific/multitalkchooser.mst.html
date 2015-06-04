@@ -5,7 +5,7 @@
         <label>
             <input name="{{property.name}}" type="checkbox" value="{{id}}" checked>
         </label>
-        {{fullname}}
+        {{title}}
     </div>
     {{/property.value}}
 </div>
@@ -14,9 +14,9 @@
 <div class="input-group">
     <select id="{{property.name}}_newInput" class="form-control">
         <option></option>
-        {{#speakers}}
-        <option value="{{id}}">{{fullname}}</option>
-        {{/speakers}}
+        {{#talks}}
+        <option value="{{id}}">{{title}}</option>
+        {{/talks}}
     </select>
     <span class="input-group-btn">
         <button class="btn btn-default" type="button" onclick="{{property.name}}NewValue();">+</button>

@@ -19,12 +19,9 @@
  */
 package org.jug.montpellier.cartridges.news.controllers;
 
-import org.jug.montpellier.cartridges.news.models.News;
+import org.jug.montpellier.models.News;
 import org.apache.felix.ipojo.annotations.Requires;
-import org.jug.montpellier.core.api.CartridgeSupport;
 import org.jug.montpellier.core.api.JugSupport;
-import org.jug.montpellier.core.api.NextEventSupport;
-import org.jug.montpellier.core.api.PartnerSupport;
 import org.jug.montpellier.core.controller.JugController;
 import org.wisdom.api.annotations.Controller;
 import org.wisdom.api.annotations.Path;

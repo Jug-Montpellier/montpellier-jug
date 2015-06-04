@@ -4,9 +4,9 @@ import org.jug.montpellier.forms.apis.Editor;
 import org.jug.montpellier.forms.apis.EditorService;
 import org.jug.montpellier.forms.models.PropertyValue;
 import org.jug.montpellier.forms.services.editors.base.BaseEditor;
-import org.jug.montpellier.models.Speaker;
-import org.montpellierjug.store.jooq.tables.daos.SpeakerDao;
+import org.montpellierjug.store.jooq.tables.daos.TalkDao;
 import org.montpellierjug.store.jooq.tables.interfaces.ISpeaker;
+import org.montpellierjug.store.jooq.tables.interfaces.ITalk;
 import org.wisdom.api.Controller;
 import org.wisdom.api.http.Renderable;
 import org.wisdom.api.templates.Template;
@@ -14,27 +14,27 @@ import org.wisdom.api.templates.Template;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * Created by fteychene on 02/06/2015.
+ * Created by fteychen on 04/06/2015.
  */
-public class MultiSpeakerEditor extends BaseEditor implements Editor {
+public class MultiTalkEditor extends BaseEditor implements Editor {
 
     Template editorTemplate;
-    SpeakerDao speakerDao;
+    private List<ITalk> value;
+    private TalkDao talkDao;
 
-    List<ISpeaker> value;
-
-    public MultiSpeakerEditor(Template editorTemplate, Template viewTemplate, EditorService factory, SpeakerDao speakerDao) {
+    public MultiTalkEditor(Template editorTemplate, Template viewTemplate, EditorService factory, TalkDao talkDao) {
         super(factory, viewTemplate);
         this.editorTemplate = editorTemplate;
-        this.speakerDao = speakerDao;
+        this.talkDao = talkDao;
     }
 
     @Override
     public Object getValue() {
-        return value;
+        return this.value;
     }
 
     @Override
@@ -48,22 +48,18 @@ public class MultiSpeakerEditor extends BaseEditor implements Editor {
 
     @Override
     public void setValue(Object value) {
-        this.value = (List<ISpeaker>) value;
+        this.value = (List<ITalk>) value;
     }
 
     @Override
     public Renderable getEditor(Controller controller, PropertyValue property) {
         Map<String, Object> parameters = new HashMap<>();
 
-        List<ISpeaker> speakers = speakerDao.findAll().stream().collect(Collectors.toList());
+        List<ITalk> talks = talkDao.findAll().stream().sorted((s1, s2) -> s2.getEventId().compareTo(s1.getEventId()))
+                .collect(Collectors.toList());
 
         parameters.put("property", property);
-        parameters.put("speakers", speakers);
-//        parameters.put("speakers",
-//                speakers.stream().filter(speaker -> !value.stream().filter( cmp -> cmp.getId().equals(speaker.getId())).limit(1).findFirst().isPresent())
-//                    .sorted((s1, s2) -> s1.getFullname().trim().compareTo(s2.getFullname().trim()))
-//                    .collect(Collectors.toList()));
+        parameters.put("talks", talks);
         return editorTemplate.render(controller, parameters);
     }
-
 }
