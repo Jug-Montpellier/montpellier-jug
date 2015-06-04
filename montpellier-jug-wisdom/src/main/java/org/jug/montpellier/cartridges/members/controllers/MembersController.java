@@ -15,7 +15,6 @@ import org.wisdom.api.templates.Template;
 /**
  * Created by chelebithil on 06/03/15.
  */
-//@Authenticated(OAuth2WisdomAuthenticator.NAME)
 @Controller
 @Path("/members")
 public class MembersController extends JugController{
@@ -36,10 +35,7 @@ public class MembersController extends JugController{
     }
 
     @Route(method = HttpMethod.GET, uri = "/")
-  //  @Role("admin")
     public Result all(){
-
-        //return json().render(speakerDao.findAll()).with(Charset.defaultCharset());
         return template(template).withParam("members", speakerDao.findAllMembers()).render();
     }
 
