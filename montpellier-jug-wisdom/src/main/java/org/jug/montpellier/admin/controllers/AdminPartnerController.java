@@ -28,15 +28,16 @@ import org.jug.montpellier.core.api.JugSupport;
 import org.jug.montpellier.core.controller.JugController;
 import org.jug.montpellier.forms.apis.ListView;
 import org.jug.montpellier.forms.apis.PropertySheet;
-import org.jug.montpellier.models.News;
-import org.jug.montpellier.models.Speaker;
 import org.jug.montpellier.models.Yearpartner;
 import org.montpellierjug.store.jooq.Tables;
 import org.montpellierjug.store.jooq.tables.daos.YearpartnerDao;
 import org.wisdom.api.annotations.*;
 import org.wisdom.api.http.HttpMethod;
 import org.wisdom.api.http.Result;
+import org.wisdom.api.security.Authenticated;
 import org.wisdom.api.templates.Template;
+import org.wisdom.oauth2.OAuth2WisdomAuthenticator;
+import org.wisdom.oauth2.controller.Role;
 
 import java.beans.IntrospectionException;
 import java.lang.reflect.InvocationTargetException;
@@ -45,6 +46,7 @@ import java.util.Map;
 
 @Controller
 @Path("/admin/partner")
+@Authenticated(OAuth2WisdomAuthenticator.NAME)
 public class AdminPartnerController extends JugController {
 
     @View("admin")
@@ -64,6 +66,7 @@ public class AdminPartnerController extends JugController {
         super(jugSupport);
     }
 
+    @Role("admin")
     @Route(method = HttpMethod.GET, uri = "/")
     public Result all(@QueryParameter("search") String search) throws Exception {
         SelectOrderByStep selectStep = dslContext.selectFrom(Tables.YEARPARTNER);
@@ -74,18 +77,21 @@ public class AdminPartnerController extends JugController {
         return template(template).withListview(listView.getRenderable(this, yearpartners, Yearpartner.class)).withParam("search", search).render();
     }
 
+    @Role("admin")
     @Route(method = HttpMethod.GET, uri = "/{id}")
     public Result partner(@Parameter("id") Long id) throws InvocationTargetException, ClassNotFoundException, IntrospectionException, IllegalAccessException {
         Yearpartner yearpartner = Yearpartner.build(yearpartnerDao.findById(id));
         return template(template).withPropertySheet(propertySheet.getRenderable(this, yearpartner)).render();
     }
 
+    @Role("admin")
     @Route(method = HttpMethod.POST, uri = "/{id}")
     public Result savePartner(@Parameter("id") Long id, @Body Yearpartner yearpartner) throws InvocationTargetException, ClassNotFoundException, IntrospectionException, IllegalAccessException {
         yearpartnerDao.update(yearpartner.into(new org.montpellierjug.store.jooq.tables.pojos.Yearpartner()));
         return redirect("/admin/partner/" + id);
     }
 
+    @Role("admin")
     @Route(method = HttpMethod.GET, uri = "/new/")
     public Result createPartner() throws ClassNotFoundException, IntrospectionException, IllegalAccessException, InvocationTargetException {
         Map<String, Object> additionalParameters = Maps.newHashMap();
@@ -93,6 +99,7 @@ public class AdminPartnerController extends JugController {
         return template(template).withPropertySheet(propertySheet.getRenderable(this, new Yearpartner(), additionalParameters)).render();
     }
 
+    @Role("admin")
     @Route(method = HttpMethod.POST, uri = "/new/")
     public Result saveNewPartner(@Body Yearpartner yearpartner) {
         yearpartnerDao.insert(yearpartner.into(new org.montpellierjug.store.jooq.tables.pojos.Yearpartner()));
