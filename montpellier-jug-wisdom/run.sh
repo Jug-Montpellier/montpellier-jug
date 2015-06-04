@@ -13,5 +13,5 @@ if [[ "$_java" ]]; then
        echo Java 8 needed :P read the manual.
        exit
     fi
-    mvn clean wisdom:run
+    mvn clean wisdom:run -DskipTests -DskipITs
 fi
