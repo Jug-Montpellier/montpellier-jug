@@ -30,6 +30,7 @@ public class Talk implements ITalk {
     private String datetime;
     @Property(displayLabel = "Event", editorService = EventChooserEditorService.class)
     private Long eventid;
+    @Property(displayLabel = "OrderInEvent?")
     private Integer orderinevent;
     @Property(displayLabel = "Speaker", editorService = SpeakerChooserEditorService.class)
     private Long speakerid;
