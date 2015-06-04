@@ -1,5 +1,6 @@
 package org.jug.montpellier.models;
 
+import org.jug.montpellier.forms.annotations.ListView;
 import org.jug.montpellier.forms.annotations.Property;
 import org.jug.montpellier.forms.services.editors.extended.BigStringEditorService;
 import org.jug.montpellier.forms.services.editors.extended.DateEditorService;
@@ -9,9 +10,7 @@ import org.montpellierjug.store.jooq.tables.interfaces.IYearpartner;
 
 import java.sql.Timestamp;
 
-/**
- * Created by Eric Taix on 21/03/2015.
- */
+@ListView(title = "Partners", labels = {"", "Name", "StartDate", "StopDate"}, columns = {"logourl", "name","startdate", "stopdate"})
 public class Yearpartner implements IYearpartner {
 
     @Property(visible = false)
