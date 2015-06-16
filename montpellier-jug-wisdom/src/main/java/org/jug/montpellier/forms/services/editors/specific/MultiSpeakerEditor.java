@@ -4,7 +4,6 @@ import org.jug.montpellier.forms.apis.Editor;
 import org.jug.montpellier.forms.apis.EditorService;
 import org.jug.montpellier.forms.models.PropertyValue;
 import org.jug.montpellier.forms.services.editors.base.BaseEditor;
-import org.jug.montpellier.models.Speaker;
 import org.montpellierjug.store.jooq.tables.daos.SpeakerDao;
 import org.montpellierjug.store.jooq.tables.interfaces.ISpeaker;
 import org.wisdom.api.Controller;

@@ -28,9 +28,11 @@ import org.jug.montpellier.core.api.JugSupport;
 import org.jug.montpellier.core.controller.JugController;
 import org.jug.montpellier.forms.apis.ListView;
 import org.jug.montpellier.forms.apis.PropertySheet;
-import org.jug.montpellier.models.Speaker;
 import org.montpellierjug.store.jooq.Tables;
 import org.montpellierjug.store.jooq.tables.daos.SpeakerDao;
+import org.montpellierjug.store.jooq.tables.daos.TalkDao;
+import org.montpellierjug.store.jooq.tables.pojos.Speaker;
+import org.montpellierjug.store.jooq.tables.pojos.Talk;
 import org.wisdom.api.annotations.*;
 import org.wisdom.api.http.HttpMethod;
 import org.wisdom.api.http.Result;
@@ -43,7 +45,6 @@ import java.beans.IntrospectionException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-import java.util.List;
 import java.util.Map;
 
 
@@ -64,6 +65,8 @@ public class AdminSpeakerController extends JugController {
     DSLContext dslContext;
     @Requires
     TalkDao talkDao;
+    @Requires
+    SpeakerDao speakerDao;
 
     public AdminSpeakerController(@Requires JugSupport jugSupport) {
         super(jugSupport);
@@ -83,15 +86,14 @@ public class AdminSpeakerController extends JugController {
     @Role("admin")
     @Route(method = HttpMethod.GET, uri = "/{id}")
     public Result speaker(@Parameter("id") Long id) throws InvocationTargetException, ClassNotFoundException, IntrospectionException, IllegalAccessException {
-        Speaker editedSpeaker = Speaker.build(speakerDao.findById(id));
-        return template(template).withPropertySheet(propertySheet.getRenderable(this, editedSpeaker)).render();
+        return template(template).withPropertySheet(propertySheet.getRenderable(this, speakerDao.findById(id))).render();
     }
 
     @Role("admin")
     @Route(method = HttpMethod.POST, uri = "/{id}")
-    public Result saveSpeaker(@Parameter("id") Long id, @Body Talk talk) throws InvocationTargetException, ClassNotFoundException, IntrospectionException, IllegalAccessException {
-        talkDao.update(talk.into(new org.montpellierjug.store.jooq.tables.pojos.Talk()));
-        return redirect("/admin/talk/" + id);
+    public Result saveSpeaker(@Parameter("id") Long id, @Body Speaker speaker) throws InvocationTargetException, ClassNotFoundException, IntrospectionException, IllegalAccessException {
+        speakerDao.update(speaker);
+        return redirect("/admin/speaker/");
     }
 
     @Role("admin")
