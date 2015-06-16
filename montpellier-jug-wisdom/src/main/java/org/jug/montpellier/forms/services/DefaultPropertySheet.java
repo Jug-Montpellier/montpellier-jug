@@ -52,17 +52,8 @@ public class DefaultPropertySheet implements PropertySheet {
     public Renderable getRenderable(Controller controller, Object object, Map<String, Object> additionalParameters) throws IntrospectionException, InvocationTargetException, IllegalAccessException, ClassNotFoundException {
         Preconditions.checkNotNull(object, "PropertySheet getRenderable need a value as parameter");
         if (object != null) {
-            List<PropertyValue> defs = Arrays.asList(object.getClass().getDeclaredFields()).stream().map((Field field) -> {
-                field.setAccessible(true);
-                try {
-                    return introspectorRegistry.getPropertyValue(object, field.getName(), controller);
-                } catch (NoSuchFieldException e) {
-                    return null;
-                }
-            }).collect(Collectors.toList());
-
             Map<String, Object> parameters = Maps.newHashMap(additionalParameters);
-            parameters.put("properties", defs);
+            parameters.put("properties", introspectorRegistry.getPropertyValues(object, controller));
             return template.render(controller, parameters);
         }
         return null;

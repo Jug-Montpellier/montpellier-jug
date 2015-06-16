@@ -34,17 +34,26 @@ public class AnnotationIntrospector extends AbstractIntrospector implements Intr
     EditorRegistry editorRegistry;
 
     @Override
-    public PropertyValue getPropertyValue(Object object, String propertyName, Controller controller) throws NoSuchFieldException {
-        Field field = object.getClass().getDeclaredField(propertyName);
-        field.setAccessible(true);
-        try {
-            Property property = field.getAnnotation(Property.class);
-            if (property != null) {
-                org.jug.montpellier.forms.models.Property prop = org.jug.montpellier.forms.models.Property.from(property);
-                return buildPropertyValue(object, field, prop, controller);
+    public List<PropertyValue> getPropertyValues(Object object, Controller controller) throws NoSuchFieldException {
+        List<PropertyValue> propertyValues = Arrays.asList(object.getClass().getDeclaredFields()).stream().map((Field field) -> {
+            try {
+                return getPropertyValue(object, field.getName(), controller);
+            } catch (Exception e) {
+                LOG.debug("Error while retreiving property value for field "+field.getName()+" of object "+object, e);
             }
-        } catch (Exception ex) {
-            LOG.warn("Unable to retrieve Editor for field " + field + " due to an error", ex);
+            return null;
+        }).filter(propertyValue -> propertyValue != null).collect(Collectors.toList());
+        return propertyValues;
+    }
+
+    @Override
+    public PropertyValue getPropertyValue(Object object, String propertyName, Controller controller) throws Exception {
+        Field field = object.getClass().getField(propertyName);
+        field.setAccessible(true);
+        Property property = field.getAnnotation(Property.class);
+        if (property != null) {
+            org.jug.montpellier.forms.models.Property prop = org.jug.montpellier.forms.models.Property.from(property);
+            return buildPropertyValue(object, field, prop, controller);
         }
         return null;
     }

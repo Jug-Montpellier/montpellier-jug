@@ -18,10 +18,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 /**
@@ -46,26 +44,43 @@ public class YamlIntrospector extends AbstractIntrospector implements Introspect
     }
 
     @Override
+    public List<PropertyValue> getPropertyValues(Object object, Controller controller) throws Exception {
+        YamlObject yamlObject = getYamlForObject(object.getClass());
+
+        // WTF: Java8 does not support streams for Map.Entry
+        List<PropertyValue> propertyValues = new ArrayList<>();
+        HashMap<String, Object> properties = yamlObject.getField("properties", HashMap.class);
+        for (Entry entry: properties.entrySet()) {
+            String propertyName = (String) entry.getKey();
+            try {
+                propertyValues.add(getPropertyValue(object, propertyName, controller));
+            }
+            catch(NoSuchFieldException e) {
+                LOG.warn("Field {} does not exist for class {}", propertyName, object.getClass());
+            }
+        }
+        return propertyValues;
+    }
+
+    @Override
     public PropertyValue getPropertyValue(Object object, String propertyName, Controller controller) throws Exception {
         YamlObject yamlObject = getYamlForObject(object.getClass());
+
         Field field = object.getClass().getDeclaredField(propertyName);
         field.setAccessible(true);
-        try {
-            HashMap<String, Object> propertyDef = yamlObject.getField("properties." + propertyName, HashMap.class);
-            if (propertyDef != null) {
-                Property property = new Property()
-                                        .setVisible(propertyDef.get("visible") != null ? (Boolean) propertyDef.get("visible") : true)
-                                        .setLabel(propertyDef.get("label") != null ? (String) propertyDef.get("label") : "")
-                                        .setDescription(propertyDef.get("description") != null ? (String) propertyDef.get("description") : null);
-                if (propertyDef.get("editor") != null) {
-                    property.setEditor((Class<? extends EditorService>) Class.forName((String) propertyDef.get("editor")));
-                }
-                return buildPropertyValue(object, field, property, controller);
+
+        HashMap<String, Object> propertyDef = yamlObject.getField("properties." + propertyName, HashMap.class);
+        if (propertyDef != null) {
+            Property property = new Property()
+                    .setVisible(propertyDef.get("visible") != null ? (Boolean) propertyDef.get("visible") : true)
+                    .setLabel(propertyDef.get("label") != null ? (String) propertyDef.get("label") : "")
+                    .setDescription(propertyDef.get("description") != null ? (String) propertyDef.get("description") : null);
+            if (propertyDef.get("editor") != null) {
+                property.setEditor((Class<? extends EditorService>) Class.forName((String) propertyDef.get("editor")));
             }
-        } catch (Exception ex) {
-            LOG.warn("Unable to retrieve Editor for field " + field + " due to an error", ex);
+            return buildPropertyValue(object, field, property, controller);
         }
-        return null;
+        throw new NoSuchFieldException();
     }
 
     @Override

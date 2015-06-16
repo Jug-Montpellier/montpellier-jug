@@ -12,9 +12,13 @@ import java.util.List;
  */
 public interface IntrospectorRegistry {
 
+    public List<PropertyValue> getPropertyValues(Object object, Controller controller);
+
     public PropertyValue getPropertyValue(Object object, String propertyName, Controller controller) throws NoSuchFieldException;
 
     public List<ListViewColumn> getColumns(Class<?> objectClass);
+
+    public String getTitle(Object object);
 
     public String getIdProperty(Class<?> objectClass) throws IOException;
 }

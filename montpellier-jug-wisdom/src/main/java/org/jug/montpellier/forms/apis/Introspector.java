@@ -12,6 +12,8 @@ import java.util.List;
  */
 public interface Introspector {
 
+    public List<PropertyValue> getPropertyValues(Object object, Controller controller) throws Exception;
+
     public PropertyValue getPropertyValue(Object object, String propertyName, Controller controller) throws Exception;
 
     public List<ListViewColumn> getColumns(Class<?> objectClass) throws IOException;

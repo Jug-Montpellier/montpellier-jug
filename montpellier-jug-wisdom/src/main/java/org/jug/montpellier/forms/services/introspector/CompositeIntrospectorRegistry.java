@@ -27,6 +27,19 @@ public class CompositeIntrospectorRegistry implements IntrospectorRegistry {
     private List<Introspector> introspectors = new ArrayList<>();
 
     @Override
+    public List<PropertyValue> getPropertyValues(Object object, Controller controller) {
+        return introspectors.stream().map((introspector -> {
+            try {
+                return introspector.getPropertyValues(object, controller);
+            } catch (Exception e) {
+                return null;
+            }
+        })).reduce(null, (currentPropertyValue, propertyValue) -> {
+            return currentPropertyValue != null && !currentPropertyValue.isEmpty() ? currentPropertyValue : propertyValue;
+        });
+    }
+
+    @Override
     public PropertyValue getPropertyValue(Object object, String propertyName, Controller controller) throws NoSuchFieldException {
         return introspectors.stream().map((introspector -> {
             try {
@@ -35,6 +48,11 @@ public class CompositeIntrospectorRegistry implements IntrospectorRegistry {
                 return null;
             }
         })).reduce(null, (currentPropertyValue, propertyValue) -> currentPropertyValue != null ? currentPropertyValue : propertyValue);
+    }
+
+    @Override
+    public String getTitle(Object object) {
+        return "title";
     }
 
     @Override
