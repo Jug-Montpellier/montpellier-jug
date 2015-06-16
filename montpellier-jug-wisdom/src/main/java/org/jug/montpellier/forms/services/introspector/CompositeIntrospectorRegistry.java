@@ -51,8 +51,14 @@ public class CompositeIntrospectorRegistry implements IntrospectorRegistry {
     }
 
     @Override
-    public String getTitle(Object object) {
-        return "title";
+    public String getListTitle(Class<?> objectClass) {
+        return introspectors.stream().map((introspector -> {
+            try {
+                return introspector.getListTitle(objectClass);
+            } catch (Exception e) {
+                return null;
+            }
+        })).reduce(null, (currentPropertyValue, propertyValue) -> currentPropertyValue != null ? currentPropertyValue : propertyValue);
     }
 
     @Override

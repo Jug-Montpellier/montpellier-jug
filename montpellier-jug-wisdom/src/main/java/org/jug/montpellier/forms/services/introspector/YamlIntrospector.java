@@ -98,6 +98,12 @@ public class YamlIntrospector extends AbstractIntrospector implements Introspect
         return yamlObject.getField("listview.id");
     }
 
+    @Override
+    public String getListTitle(Class<?> objectClass) throws IOException {
+        YamlObject yamlObject = getYamlForObject(objectClass);
+        return yamlObject.getField("listview.title");
+    }
+
     private YamlObject getYamlForObject(Class<?> objectClassname) throws IOException {
         String resourceName = "introspector/" + objectClassname.getName() + ".yaml";
         YamlObject yamlObject = yamlCache.get(resourceName);

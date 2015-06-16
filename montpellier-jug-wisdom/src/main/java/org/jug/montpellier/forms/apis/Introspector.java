@@ -19,4 +19,6 @@ public interface Introspector {
     public List<ListViewColumn> getColumns(Class<?> objectClass) throws IOException;
 
     public String getIdProperty(Class<?> objectClass) throws IOException;
+
+    public String getListTitle(Class<?> objectClass) throws IOException;
 }

@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wisdom.api.Controller;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
@@ -39,7 +40,7 @@ public class AnnotationIntrospector extends AbstractIntrospector implements Intr
             try {
                 return getPropertyValue(object, field.getName(), controller);
             } catch (Exception e) {
-                LOG.debug("Error while retreiving property value for field "+field.getName()+" of object "+object, e);
+                LOG.debug("Error while retreiving property value for field " + field.getName() + " of object " + object, e);
             }
             return null;
         }).filter(propertyValue -> propertyValue != null).collect(Collectors.toList());
@@ -76,6 +77,13 @@ public class AnnotationIntrospector extends AbstractIntrospector implements Intr
     public String getIdProperty(Class<?> objectClass) {
         ListView annotation = objectClass.getAnnotation(ListView.class);
         return annotation != null ? annotation.id() : null;
+    }
+
+    @Override
+    public String getListTitle(Class<?> objectClass) throws IOException {
+        ListView annotation = objectClass.getAnnotation(ListView.class);
+        if (annotation == null) return null;
+        return annotation.title();
     }
 
     @Override

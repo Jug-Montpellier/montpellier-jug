@@ -28,6 +28,7 @@
 #     editor: org.jug.montpellier.forms.services.editors.extended.AgeFakeEditor
 #
 listview:
+  title: Speakers
   id: id
   columns: photourl:|fullname:Name|compan:Company|email:Email
 properties:

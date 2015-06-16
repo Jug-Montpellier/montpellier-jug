@@ -81,7 +81,7 @@ public class DefaultListView implements org.jug.montpellier.forms.apis.ListView 
         }).collect(Collectors.toList());
 
         Map<String, Object> parameters = Maps.newHashMap(additionnalParameters);
-        //parameters.put("title", annotation.title());
+        parameters.put("title", introspectorRegistry.getListTitle(objectClass));
         parameters.put("hasData", !listViewRows.isEmpty());
         parameters.put("rows", listViewRows);
         parameters.put("labels", columns.stream().map(column -> column.getLabel()).collect(Collectors.toList()));

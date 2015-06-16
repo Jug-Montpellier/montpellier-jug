@@ -18,7 +18,7 @@ public interface IntrospectorRegistry {
 
     public List<ListViewColumn> getColumns(Class<?> objectClass);
 
-    public String getTitle(Object object);
+    public String getListTitle(Class<?> objectClass);
 
     public String getIdProperty(Class<?> objectClass) throws IOException;
 }
