@@ -1,0 +1,77 @@
+{{> layouts/header}}
+
+{{#nextEvent}}
+{{> layouts/nextEventView}}
+{{/nextEvent}}
+
+<section id="speakerstopbox">
+    <h2>Intervenir?</h2>
+    <p>Vous voulez proposer un sujet, faire une présentation d'une
+        technologie que vous maitrisez et partager votre expérience avec une
+        communauté ouverte? N'hésitez pas à nous contacter!</p>
+</section>
+<section id="members">
+    {{#showAllSpeakers}}
+        <h2>Speakers</h2>
+        {{#speakers}}
+        <article>
+            <div class="member-photo">
+                <img width="110" alt="{{fullname}}" src="{{photourl}}">
+            </div>
+            <div>
+                <h3>
+                    <a href="/speakers/{{id}}">{{fullname}}</a>
+                </h3>
+                {{#url}}
+                    <span>{{compan}}</span><br />
+                {{/url}}
+                {{^url}}
+                    <span><a href="{{url}}" target="_blank">{{compan}}</a></span><br />
+                {{/url}}
+                <br>
+                <br>
+                {{description}}
+            </div>
+        </article>
+        {{/speakers}}
+    {{/showAllSpeakers}}
+    {{^showAllSpeakers}}
+        <h2>Speaker</h2>
+        {{#speaker}}
+        <article>
+            <div class="member-photo">
+                <img width="110" alt="{{fullname}}" src="{{photourl}}">
+            </div>
+            <div>
+                <h3>
+                    {{fullname}}
+                </h3>
+                {{#url}}
+                    <span>{{compan}}</span><br />
+                {{/url}}
+                {{^url}}
+                    <span><a href="{{url}}" target="_blank">{{compan}}</a></span><br />
+                {{/url}}
+                <br>
+                <br>
+                {{description}}
+                {{#speakersTalksLength}}
+                <br>
+                <br>
+                <h3>
+                    A présenté les événements suivants :
+                </h3>
+                {{/speakersTalksLength}}
+                {{#speakersTalks}}
+                <div class="speaker-event">
+                    <a href="/events/{{eventId}}">{{title}}</a>
+                </div>
+                {{/speakersTalks}}
+            </div>
+        </article>
+        {{/speaker}}
+    {{/showAllSpeakers}}
+
+</section>
+
+{{> layouts/footer}}
