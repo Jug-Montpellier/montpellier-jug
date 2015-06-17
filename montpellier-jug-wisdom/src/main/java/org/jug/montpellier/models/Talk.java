@@ -9,6 +9,7 @@ import org.montpellierjug.store.jooq.tables.interfaces.IEvent;
 import org.montpellierjug.store.jooq.tables.interfaces.ISpeaker;
 import org.montpellierjug.store.jooq.tables.interfaces.ITalk;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,6 +37,8 @@ public class Talk implements ITalk {
     private Long speakerid;
     @Property(visible = false)
     private ISpeaker speaker;
+    @Property(displayLabel = "Links")
+    private String[] links;
 
     public static Talk build(ITalk from) {
         Talk talk = new Talk();
@@ -129,6 +132,17 @@ public class Talk implements ITalk {
     }
 
     @Override
+    public ITalk setLinks(String[] value) {
+        links = value;
+        return this;
+    }
+
+    @Override
+    public String[] getLinks() {
+        return links;
+    }
+
+    @Override
     public void from(ITalk from) {
         setId(from.getId());
         setOrderinevent(from.getOrderinevent());
@@ -137,6 +151,7 @@ public class Talk implements ITalk {
         setTitle(from.getTitle());
         setEventId(from.getEventId());
         setSpeakerId(from.getSpeakerId());
+        setLinks(from.getLinks());
     }
 
     @Override

@@ -105,7 +105,7 @@ public class AdminTalkController extends JugController {
     @Role("admin")
     @Route(method = HttpMethod.POST, uri = "/new/")
     public Result saveNewTalk(@Body Talk talk) {
-        talkDao.update(talk.into(new org.montpellierjug.store.jooq.tables.pojos.Talk()));
+        talkDao.insert(talk.into(new org.montpellierjug.store.jooq.tables.pojos.Talk()));
         return redirect("..");
     }
 
