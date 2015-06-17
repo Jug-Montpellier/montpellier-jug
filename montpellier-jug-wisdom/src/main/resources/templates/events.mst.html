@@ -37,6 +37,13 @@
         <p>Présenté par <a href="/speaker/{{id}}">{{fullname}}</a></p>
         {{/speaker}}
         <p>{{teaser}}</p>
+        <p>
+            <ul class="list-unstyled">
+            {{#links}}
+                <li class="url"><a href="{{.}}" target="_blank">{{.}}</a></li>
+            {{/links}}
+        </ul>
+        </p>
         {{/talks}}
 
         <h2>Lieu</h2>
