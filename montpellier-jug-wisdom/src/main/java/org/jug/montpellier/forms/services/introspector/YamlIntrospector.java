@@ -44,6 +44,15 @@ public class YamlIntrospector extends AbstractIntrospector implements Introspect
     }
 
     @Override
+    public boolean accept(Class<?> objectClass) {
+        try {
+            return getYamlForObject(objectClass) != null;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    @Override
     public List<PropertyValue> getPropertyValues(Object object, Controller controller) throws Exception {
         YamlObject yamlObject = getYamlForObject(object.getClass());
 

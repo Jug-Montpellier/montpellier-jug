@@ -79,7 +79,7 @@ public class AdminPartnerController extends JugController {
 
     @Role("admin")
     @Route(method = HttpMethod.GET, uri = "/{id}")
-    public Result partner(@Parameter("id") Long id) throws InvocationTargetException, ClassNotFoundException, IntrospectionException, IllegalAccessException {
+    public Result partner(@Parameter("id") Long id) throws Exception {
         Yearpartner yearpartner = Yearpartner.build(yearpartnerDao.findById(id));
         return template(template).withPropertySheet(propertySheet.getRenderable(this, yearpartner)).render();
     }
@@ -93,7 +93,7 @@ public class AdminPartnerController extends JugController {
 
     @Role("admin")
     @Route(method = HttpMethod.GET, uri = "/new/")
-    public Result createPartner() throws ClassNotFoundException, IntrospectionException, IllegalAccessException, InvocationTargetException {
+    public Result createPartner() throws Exception {
         Map<String, Object> additionalParameters = Maps.newHashMap();
         additionalParameters.put("cancelRedirect", "..");
         return template(template).withPropertySheet(propertySheet.getRenderable(this, new Yearpartner(), additionalParameters)).render();

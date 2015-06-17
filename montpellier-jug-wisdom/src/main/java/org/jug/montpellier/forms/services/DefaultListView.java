@@ -67,7 +67,7 @@ public class DefaultListView implements org.jug.montpellier.forms.apis.ListView 
                     try {
                         PropertyValue propertyValue = introspectorRegistry.getPropertyValue(object, column.getField(), controller);
                         cell.content = propertyValue.view;
-                    } catch (NoSuchFieldException e) {
+                    } catch (Exception e) {
                         cell.content = "error";
                     }
                     return cell;

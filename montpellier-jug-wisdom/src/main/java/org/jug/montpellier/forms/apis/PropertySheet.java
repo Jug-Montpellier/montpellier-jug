@@ -12,8 +12,8 @@ import java.util.Map;
  */
 public interface PropertySheet {
 
-    public Renderable getRenderable(Controller controller, Object object) throws IntrospectionException, InvocationTargetException, IllegalAccessException, ClassNotFoundException;
+    public Renderable getRenderable(Controller controller, Object object) throws Exception;
 
-    public Renderable getRenderable(Controller controller, Object object, Map<String, Object> additionalParameters) throws IntrospectionException, InvocationTargetException, IllegalAccessException, ClassNotFoundException;
+    public Renderable getRenderable(Controller controller, Object object, Map<String, Object> additionalParameters) throws Exception;
 
 }

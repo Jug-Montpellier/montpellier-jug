@@ -35,6 +35,11 @@ public class AnnotationIntrospector extends AbstractIntrospector implements Intr
     EditorRegistry editorRegistry;
 
     @Override
+    public boolean accept(Class<?> objectClass) {
+        return objectClass.getAnnotation(ListView.class) != null;
+    }
+
+    @Override
     public List<PropertyValue> getPropertyValues(Object object, Controller controller) throws NoSuchFieldException {
         List<PropertyValue> propertyValues = Arrays.asList(object.getClass().getDeclaredFields()).stream().map((Field field) -> {
             try {
@@ -49,7 +54,7 @@ public class AnnotationIntrospector extends AbstractIntrospector implements Intr
 
     @Override
     public PropertyValue getPropertyValue(Object object, String propertyName, Controller controller) throws Exception {
-        Field field = object.getClass().getField(propertyName);
+        Field field = object.getClass().getDeclaredField(propertyName);
         field.setAccessible(true);
         Property property = field.getAnnotation(Property.class);
         if (property != null) {

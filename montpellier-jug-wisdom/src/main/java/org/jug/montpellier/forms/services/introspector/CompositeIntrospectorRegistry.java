@@ -13,6 +13,7 @@ import org.wisdom.api.Controller;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by Eric Taix on 28/03/15.
@@ -26,61 +27,33 @@ public class CompositeIntrospectorRegistry implements IntrospectorRegistry {
 
     private List<Introspector> introspectors = new ArrayList<>();
 
-    @Override
-    public List<PropertyValue> getPropertyValues(Object object, Controller controller) {
-        return introspectors.stream().map((introspector -> {
-            try {
-                return introspector.getPropertyValues(object, controller);
-            } catch (Exception e) {
-                return null;
-            }
-        })).reduce(null, (currentPropertyValue, propertyValue) -> {
-            return currentPropertyValue != null && !currentPropertyValue.isEmpty() ? currentPropertyValue : propertyValue;
-        });
+    private Optional<Introspector> getIntrospector(Class<?> objectClass) {
+        return introspectors.stream().filter(introspec -> introspec.accept(objectClass)).findFirst();
     }
 
     @Override
-    public PropertyValue getPropertyValue(Object object, String propertyName, Controller controller) throws NoSuchFieldException {
-        return introspectors.stream().map((introspector -> {
-            try {
-                return introspector.getPropertyValue(object, propertyName, controller);
-            } catch (Exception e) {
-                return null;
-            }
-        })).reduce(null, (currentPropertyValue, propertyValue) -> currentPropertyValue != null ? currentPropertyValue : propertyValue);
+    public List<PropertyValue> getPropertyValues(Object object, Controller controller) throws Exception {
+        return getIntrospector(object.getClass()).get().getPropertyValues(object, controller);
     }
 
     @Override
-    public String getListTitle(Class<?> objectClass) {
-        return introspectors.stream().map((introspector -> {
-            try {
-                return introspector.getListTitle(objectClass);
-            } catch (Exception e) {
-                return null;
-            }
-        })).reduce(null, (currentPropertyValue, propertyValue) -> currentPropertyValue != null ? currentPropertyValue : propertyValue);
+    public PropertyValue getPropertyValue(Object object, String propertyName, Controller controller) throws Exception {
+        return getIntrospector(object.getClass()).get().getPropertyValue(object, propertyName, controller);
     }
 
     @Override
-    public List<ListViewColumn> getColumns(Class<?> objectClass) {
-        return introspectors.stream().map((introspector -> {
-            try {
-                return introspector.getColumns(objectClass);
-            } catch (Exception e) {
-                return null;
-            }
-        })).reduce(null, (currentPropertyValue, propertyValue) -> currentPropertyValue != null ? currentPropertyValue : propertyValue);
+    public String getListTitle(Class<?> objectClass) throws IOException {
+        return getIntrospector(objectClass).get().getListTitle(objectClass);
+    }
+
+    @Override
+    public List<ListViewColumn> getColumns(Class<?> objectClass) throws IOException {
+        return getIntrospector(objectClass).get().getColumns(objectClass);
     }
 
     @Override
     public String getIdProperty(Class<?> objectClass) throws IOException {
-        return introspectors.stream().map((introspector -> {
-            try {
-                return introspector.getIdProperty(objectClass);
-            } catch (Exception e) {
-                return null;
-            }
-        })).reduce(null, (currentPropertyValue, propertyValue) -> currentPropertyValue != null ? currentPropertyValue : propertyValue);
+        return getIntrospector(objectClass).get().getIdProperty(objectClass);
     }
 
     @Bind(specification = Introspector.class, aggregate = true)

@@ -85,7 +85,7 @@ public class AdminSpeakerController extends JugController {
 
     @Role("admin")
     @Route(method = HttpMethod.GET, uri = "/{id}")
-    public Result speaker(@Parameter("id") Long id) throws InvocationTargetException, ClassNotFoundException, IntrospectionException, IllegalAccessException {
+    public Result speaker(@Parameter("id") Long id) throws Exception {
         return template(template).withPropertySheet(propertySheet.getRenderable(this, speakerDao.findById(id))).render();
     }
 
@@ -98,7 +98,7 @@ public class AdminSpeakerController extends JugController {
 
     @Role("admin")
     @Route(method = HttpMethod.GET, uri = "/new/")
-    public Result createSpeaker() throws InvocationTargetException, ClassNotFoundException, IntrospectionException, IllegalAccessException {
+    public Result createSpeaker() throws Exception {
         Map<String, Object> additionalParameters = Maps.newHashMap();
         additionalParameters.put("cancelRedirect", "..");
         return template(template).withPropertySheet(propertySheet.getRenderable(this, new Speaker(), additionalParameters)).render();

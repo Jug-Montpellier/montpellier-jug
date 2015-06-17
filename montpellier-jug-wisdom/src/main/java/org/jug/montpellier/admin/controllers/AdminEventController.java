@@ -68,7 +68,7 @@ public class AdminEventController extends JugController {
 
     @Role("admin")
     @Route(method = HttpMethod.GET, uri = "/{id}")
-    public Result get(@Parameter("id") Long id) throws InvocationTargetException, ClassNotFoundException, IntrospectionException, IllegalAccessException {
+    public Result get(@Parameter("id") Long id) throws Exception {
         Event editedTalk = Event.build(eventDao.findById(id));
         return template(template).withPropertySheet(propertySheet.getRenderable(this, editedTalk)).render();
     }
@@ -82,7 +82,7 @@ public class AdminEventController extends JugController {
 
     @Role("admin")
     @Route(method = HttpMethod.GET, uri = "/new/")
-    public Result createTalk() throws ClassNotFoundException, IntrospectionException, IllegalAccessException, InvocationTargetException {
+    public Result createTalk() throws Exception {
         Map<String, Object> additionalParameters = Maps.newHashMap();
         additionalParameters.put("cancelRedirect", "..");
         return template(template).withPropertySheet(propertySheet.getRenderable(this, new Event(), additionalParameters)).render();

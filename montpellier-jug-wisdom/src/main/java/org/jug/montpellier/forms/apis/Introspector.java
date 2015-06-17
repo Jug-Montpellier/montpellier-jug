@@ -12,6 +12,8 @@ import java.util.List;
  */
 public interface Introspector {
 
+    public boolean accept(Class<?> objectClass);
+
     public List<PropertyValue> getPropertyValues(Object object, Controller controller) throws Exception;
 
     public PropertyValue getPropertyValue(Object object, String propertyName, Controller controller) throws Exception;

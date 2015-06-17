@@ -65,7 +65,7 @@ public class AdminNewsController extends JugController {
 
     @Role("admin")
     @Route(method = HttpMethod.GET, uri = "/{id}")
-    public Result get(@Parameter("id") Long id) throws InvocationTargetException, ClassNotFoundException, IntrospectionException, IllegalAccessException {
+    public Result get(@Parameter("id") Long id) throws Exception {
         News editedNews = News.build(newsDao.findById(id));
         return template(template).withPropertySheet(propertySheet.getRenderable(this, editedNews)).render();
     }
@@ -79,7 +79,7 @@ public class AdminNewsController extends JugController {
 
     @Role("admin")
     @Route(method = HttpMethod.GET, uri = "/new/")
-    public Result createTalk() throws ClassNotFoundException, IntrospectionException, IllegalAccessException, InvocationTargetException {
+    public Result createTalk() throws Exception {
         Map<String, Object> additionalParameters = Maps.newHashMap();
         additionalParameters.put("cancelRedirect", "..");
         return template(template).withPropertySheet(propertySheet.getRenderable(this, new News(), additionalParameters)).render();

@@ -44,12 +44,12 @@ public class DefaultPropertySheet implements PropertySheet {
     }
 
     @Override
-    public Renderable getRenderable(Controller controller, Object object) throws IntrospectionException, InvocationTargetException, IllegalAccessException, ClassNotFoundException {
+    public Renderable getRenderable(Controller controller, Object object) throws Exception {
        return getRenderable(controller, object, Maps.newHashMap());
     }
 
     @Override
-    public Renderable getRenderable(Controller controller, Object object, Map<String, Object> additionalParameters) throws IntrospectionException, InvocationTargetException, IllegalAccessException, ClassNotFoundException {
+    public Renderable getRenderable(Controller controller, Object object, Map<String, Object> additionalParameters) throws Exception {
         Preconditions.checkNotNull(object, "PropertySheet getRenderable need a value as parameter");
         if (object != null) {
             Map<String, Object> parameters = Maps.newHashMap(additionalParameters);
