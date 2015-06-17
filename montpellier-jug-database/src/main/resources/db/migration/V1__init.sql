@@ -64,6 +64,7 @@
         title text,
         event_id bigint,
         speaker_id bigint,
+        links text[],
         primary key (id)
     );
 
