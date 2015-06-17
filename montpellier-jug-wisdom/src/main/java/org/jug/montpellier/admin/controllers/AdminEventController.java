@@ -20,6 +20,7 @@ import org.wisdom.api.http.Result;
 import org.wisdom.api.security.Authenticated;
 import org.wisdom.api.templates.Template;
 import org.wisdom.oauth2.OAuth2WisdomAuthenticator;
+import org.wisdom.oauth2.controller.OAuth2Controller;
 import org.wisdom.oauth2.controller.Role;
 
 import java.beans.IntrospectionException;

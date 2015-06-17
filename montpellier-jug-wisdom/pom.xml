@@ -140,6 +140,10 @@
       <artifactId>wisdom-raml-monitor-console</artifactId>
       <version>${wisdom.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+    </dependency>
   </dependencies>
 
   <build>

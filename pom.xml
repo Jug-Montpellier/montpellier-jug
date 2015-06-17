@@ -36,7 +36,7 @@
       <spring.version>4.1.2.RELEASE_1</spring.version>
       <wisdom-postgresql.version>9.1-902.jdbc4_1</wisdom-postgresql.version>
       <wisdom-activiti.version>1.0.3-SNAPSHOT</wisdom-activiti.version>
-      <wisdom-oauth2-authenticator.version>1.0-SNAPSHOT</wisdom-oauth2-authenticator.version>
+      <wisdom-oauth2-authenticator.version>1.1-SNAPSHOT</wisdom-oauth2-authenticator.version>
       <wisdom-oauth2-controller.version>1.1-SNAPSHOT</wisdom-oauth2-controller.version>
       <flyway.version>3.2.1</flyway.version>
       <java.version>1.8</java.version>
@@ -104,7 +104,11 @@
             <artifactId>org.apache.oltu.oauth2.client</artifactId>
             <version>1.0.0</version>
           </dependency>
-
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>4.3.4</version>
+            </dependency>
           <dependency>
             <groupId>org.apache.felix</groupId>
             <artifactId>org.apache.felix.fileinstall</artifactId>
