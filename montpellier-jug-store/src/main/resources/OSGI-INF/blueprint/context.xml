@@ -83,7 +83,7 @@
   <bean id="talkDao" class="org.montpellierjug.store.jooq.tables.daos.TalkDao">
     <argument index="0" ref="config"/>
   </bean>
-  <bean id="userDao" class="org.montpellierjug.store.jooq.tables.daos.UserDao">
+  <bean id="userDao" class="org.montpellierjug.store.jooq.tables.daos.JuguserDao">
     <argument index="0" ref="config"/>
   </bean>
 
@@ -104,7 +104,7 @@
   <service ref="speakerDao" interface="org.montpellierjug.store.jooq.tables.daos.SpeakerDao" />
   <service ref="tagDao" interface="org.montpellierjug.store.jooq.tables.daos.TagDao" />
   <service ref="talkDao" interface="org.montpellierjug.store.jooq.tables.daos.TalkDao" />
-  <service ref="userDao" interface="org.montpellierjug.store.jooq.tables.daos.UserDao" />
+  <service ref="userDao" interface="org.montpellierjug.store.jooq.tables.daos.JuguserDao" />
   <service ref="yearpartnerDao" interface="org.montpellierjug.store.jooq.tables.daos.YearpartnerDao" />
   <service ref="participationDao" interface="org.montpellierjug.store.jooq.tables.daos.ParticipationDao" />
 

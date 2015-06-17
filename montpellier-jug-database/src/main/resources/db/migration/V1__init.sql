@@ -37,7 +37,7 @@
         code text,
         status integer,
         event_id bigint,
-        user_id bigint,
+        juguser_id bigint,
         primary key (id)
     );
 
@@ -68,7 +68,7 @@
         primary key (id)
     );
 
-    create table "User" (
+    create table JUGUser (
         id bigserial,
         email text,
         primary key (id)
@@ -120,9 +120,9 @@
         references Event (id);
 
     alter table Participation
-        add constraint participation_user_id_fk
-        foreign key (user_id)
-        references "User" (id);
+        add constraint participation_juguser_id_fk
+        foreign key (juguser_id)
+        references JUGUser (id);
 
     alter table Talk
         add constraint talk_event_id_fk
