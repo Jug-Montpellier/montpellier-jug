@@ -10,7 +10,7 @@ import org.montpellierjug.store.jooq.tables.pojos.Speaker;
 import org.wisdom.api.router.Router;
 
 @Component
-@Provides(specifications = Speaker.class)
+@Provides(specifications = Cartridge.class)
 @Instantiate
 public class SpeakersCartridge implements Cartridge {
 
@@ -29,6 +29,6 @@ public class SpeakersCartridge implements Cartridge {
 
     @Override
     public int position() {
-        return 1;
+        return 6;
     }
 }
