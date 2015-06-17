@@ -1,6 +1,6 @@
 package org.jug.montpellier.forms.apis;
 
-import org.jug.montpellier.forms.annotations.Property;
+import org.jug.montpellier.forms.models.Property;
 
 /**
  * Manages FormEditor and property type relationship. FormEditor are registered by OSGi injection

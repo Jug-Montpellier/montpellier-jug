@@ -1,6 +1,8 @@
+
 package org.jug.montpellier.admin.controllers;
 
 import com.google.common.collect.Maps;
+
 import org.apache.felix.ipojo.annotations.Requires;
 import org.jooq.DSLContext;
 import org.jooq.SelectOrderByStep;
@@ -23,6 +25,7 @@ import org.wisdom.oauth2.controller.Role;
 import java.beans.IntrospectionException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+
 import java.util.Map;
 
 /**
@@ -65,7 +68,7 @@ public class AdminEventController extends JugController {
 
     @Role("admin")
     @Route(method = HttpMethod.GET, uri = "/{id}")
-    public Result get(@Parameter("id") Long id) throws InvocationTargetException, ClassNotFoundException, IntrospectionException, IllegalAccessException {
+    public Result get(@Parameter("id") Long id) throws Exception {
         Event editedTalk = Event.build(eventDao.findById(id));
         return template(template).withPropertySheet(propertySheet.getRenderable(this, editedTalk)).render();
     }
@@ -79,7 +82,7 @@ public class AdminEventController extends JugController {
 
     @Role("admin")
     @Route(method = HttpMethod.GET, uri = "/new/")
-    public Result createTalk() throws ClassNotFoundException, IntrospectionException, IllegalAccessException, InvocationTargetException {
+    public Result createTalk() throws Exception {
         Map<String, Object> additionalParameters = Maps.newHashMap();
         additionalParameters.put("cancelRedirect", "..");
         return template(template).withPropertySheet(propertySheet.getRenderable(this, new Event(), additionalParameters)).render();
@@ -91,4 +94,5 @@ public class AdminEventController extends JugController {
         eventDao.update(event.into(new org.montpellierjug.store.jooq.tables.pojos.Event()));
         return redirect("..");
     }
+
 }

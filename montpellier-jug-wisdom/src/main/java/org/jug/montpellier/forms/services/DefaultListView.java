@@ -6,10 +6,9 @@ import org.apache.felix.ipojo.annotations.Instantiate;
 import org.apache.felix.ipojo.annotations.Provides;
 import org.apache.felix.ipojo.annotations.Requires;
 import org.jug.montpellier.forms.annotations.ListView;
-import org.jug.montpellier.forms.annotations.Property;
-import org.jug.montpellier.forms.apis.Editor;
-import org.jug.montpellier.forms.apis.EditorRegistry;
+import org.jug.montpellier.forms.apis.IntrospectorRegistry;
 import org.jug.montpellier.forms.models.ListViewCell;
+import org.jug.montpellier.forms.models.ListViewColumn;
 import org.jug.montpellier.forms.models.ListViewRow;
 import org.jug.montpellier.forms.models.PropertyValue;
 import org.slf4j.Logger;
@@ -19,6 +18,7 @@ import org.wisdom.api.annotations.View;
 import org.wisdom.api.http.Renderable;
 import org.wisdom.api.templates.Template;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -35,9 +35,10 @@ import java.util.stream.Collectors;
 public class DefaultListView implements org.jug.montpellier.forms.apis.ListView {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultListView.class);
-
+    private static final String DEFAULT_PROPERTY_ID = "id";
     @Requires
-    EditorRegistry editorRegistry;
+    IntrospectorRegistry introspectorRegistry;
+
     @View("editors/listview")
     Template template;
 
@@ -48,51 +49,42 @@ public class DefaultListView implements org.jug.montpellier.forms.apis.ListView 
 
     @Override
     public <T> Renderable getRenderable(Controller controller, List<T> objects, Class<T> objectClass, Map<String, Object> additionnalParameters) throws Exception {
-        ListView annotation = objectClass.getAnnotation(ListView.class);
-        List<String> columns = Arrays.asList(annotation.columns());
+        final List<ListViewColumn> columns = introspectorRegistry.getColumns(objectClass);
         List<ListViewRow> listViewRows = objects.stream().map((final T object) -> {
             ListViewRow row = new ListViewRow();
             try {
-                Field idField = object.getClass().getDeclaredField(annotation.id());
+                // Build id property when the user click
+                String id = introspectorRegistry.getIdProperty(objectClass);
+                if (id == null) {
+                    id = DEFAULT_PROPERTY_ID;
+                }
+                Field idField = object.getClass().getDeclaredField(id);
                 idField.setAccessible(true);
                 row.id = idField.get(object);
-                row.cells = columns.stream().map((String column) -> {
+                // Build cells data
+                row.cells = columns.stream().map((ListViewColumn column) -> {
                     ListViewCell cell = new ListViewCell();
                     try {
-                        Field field = object.getClass().getDeclaredField(column);
-                        field.setAccessible(true);
-                        Property property = field.getAnnotation(Property.class);
-                        Editor editor = editorRegistry.createEditor(field.get(object), field.getType(), property);
-                        if (editor != null) {
-                            PropertyValue propertyValue = new PropertyValue();
-                            propertyValue.name = field.getName();
-                            propertyValue.displayname = property != null && property.displayLabel() != null && !property.displayLabel().isEmpty() ? property.displayLabel() : field.getName();
-                            propertyValue.description = property != null && property.description() != null && !property.description().isEmpty() ? property.description() : "";
-                            propertyValue.value = editor.getValue();
-                            propertyValue.valueAsText = editor.getAsText();
-                            propertyValue.editorName = editor.service().getClass().getSimpleName().toLowerCase();
-                            propertyValue.visible = property != null ? property.visible() : propertyValue.visible;
-                            cell.content = editor.getView(controller, propertyValue).content();
-                        }
-                    } catch (NoSuchFieldException | ClassNotFoundException | IllegalAccessException e) {
+                        PropertyValue propertyValue = introspectorRegistry.getPropertyValue(object, column.getField(), controller);
+                        cell.content = propertyValue.view;
+                    } catch (Exception e) {
                         cell.content = "error";
                     }
                     return cell;
                 }).collect(Collectors.toList());
             } catch (NoSuchFieldException | IllegalAccessException e) {
                 LOG.error("Error while getting id() for object: "+object, e);
+            } catch (IOException e) {
+                LOG.error("Error while getting id() for object: "+object, e);
             }
             return row;
         }).collect(Collectors.toList());
 
-        List<String> labels = Arrays.asList(annotation.labels());
-
-
         Map<String, Object> parameters = Maps.newHashMap(additionnalParameters);
-        parameters.put("title", annotation.title());
+        parameters.put("title", introspectorRegistry.getListTitle(objectClass));
         parameters.put("hasData", !listViewRows.isEmpty());
         parameters.put("rows", listViewRows);
-        parameters.put("labels", labels);
+        parameters.put("labels", columns.stream().map(column -> column.getLabel()).collect(Collectors.toList()));
         return template.render(controller, parameters);
     }
 }

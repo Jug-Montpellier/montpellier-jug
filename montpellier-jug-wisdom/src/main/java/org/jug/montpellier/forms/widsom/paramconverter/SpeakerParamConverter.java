@@ -3,8 +3,8 @@ package org.jug.montpellier.forms.widsom.paramconverter;
 import org.apache.felix.ipojo.annotations.Component;
 import org.apache.felix.ipojo.annotations.Instantiate;
 import org.apache.felix.ipojo.annotations.Provides;
-import org.jug.montpellier.models.Speaker;
 import org.montpellierjug.store.jooq.tables.interfaces.ISpeaker;
+import org.montpellierjug.store.jooq.tables.pojos.Speaker;
 import org.wisdom.api.content.ParameterConverter;
 
 /**

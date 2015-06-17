@@ -1,0 +1,65 @@
+#
+# YAML introspector file specification
+#
+# listview:
+#   id: <property which contains the unique id>
+#   columns: <attribut1>:[<label1>]|<attribut1>:[<label1>]
+# properties:
+#   <attribut>:
+#     visible: <true or false - default to false>
+#     label: <label to use - default to attribut's name>
+#     description: <description of the attribut - default to null>
+#     editor: <full classname of the attribut's editor without 'class' extension>
+#
+# Example
+# -------
+# listview:
+#   id: id
+#   columns: fullname:Full name|age:Age of the speaker
+# properties:
+#   id:
+#     visible: false
+#   fullname:
+#     label: Name
+#     description: Name of the speaker
+#   age:
+#     label: Age
+#     description: Between 18 and 99 years old
+#     editor: org.jug.montpellier.forms.services.editors.extended.AgeFakeEditor
+#
+listview:
+  title: Speakers
+  id: id
+  columns: photourl:|fullname:Name|compan:Company|email:Email
+properties:
+  id:
+    visible: false
+  fullname:
+    label: Fullname
+  activity:
+    label: Activity
+    description: Main or opensource activity
+  compan:
+    label: Company
+    description: Company or Opensource project
+  url:
+    label: Company Web site
+  personaurl:
+    label: Personal Web site
+  email:
+    label: Email
+    description: This email will not be shown
+    editor: org.jug.montpellier.forms.services.editors.extended.EmailEditorService
+  description:
+    label: Tell us about you
+    editor: org.jug.montpellier.forms.services.editors.extended.BigStringEditorService
+  jugMember:
+    label: JUG member?
+  memberFct:
+    label: Role in the JUG
+  photourl:
+    label: Photo URL
+    editor: org.jug.montpellier.forms.services.editors.extended.ImageUrlEditorService
+
+
+
