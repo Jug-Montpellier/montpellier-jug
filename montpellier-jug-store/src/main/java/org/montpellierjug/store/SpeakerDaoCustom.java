@@ -7,6 +7,7 @@ import org.apache.felix.ipojo.annotations.Requires;
 import org.jooq.DSLContext;
 import org.montpellierjug.store.jooq.Tables;
 import org.montpellierjug.store.jooq.tables.pojos.Speaker;
+import org.montpellierjug.store.jooq.tables.records.SpeakerRecord;
 
 import java.util.List;
 
