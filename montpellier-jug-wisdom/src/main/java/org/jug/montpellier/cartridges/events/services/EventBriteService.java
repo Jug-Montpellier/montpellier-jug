@@ -1,9 +1,10 @@
 package org.jug.montpellier.cartridges.events.services;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpHost;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpResponse;
+import com.typesafe.config.ConfigException;
+import org.apache.aries.util.io.IOUtils;
+import org.apache.felix.ipojo.annotations.Requires;
+import org.apache.felix.ipojo.util.StreamUtils;
+import org.apache.http.*;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -17,62 +18,176 @@ import org.wisdom.api.annotations.Path;
 import org.wisdom.api.annotations.PathParameter;
 import org.wisdom.api.annotations.Route;
 import org.wisdom.api.annotations.scheduler.Async;
+import org.wisdom.api.bodies.RenderableStream;
+import org.wisdom.api.cache.Cache;
 import org.wisdom.api.http.HttpMethod;
 import org.wisdom.api.http.Result;
+import org.wisdom.api.http.Status;
 
 import java.io.IOException;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 import java.net.InetAddress;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Created by cheleb on 17/06/15.
  */
 @Controller
 @Path("/eventbrite")
-public class EventBriteService extends DefaultController{
+public class EventBriteService extends DefaultController {
 
-    private String token=System.getProperty("token");
+    private String token;
 
-    @Route(uri="/events", method = HttpMethod.GET)
+    @Requires
+    private Cache cache;
+
+    private static String EVENT_BRITE_API = "https://www.eventbriteapi.com";
+
+    {
+        token = System.getProperty("token");
+        if (token == null)
+            logger().warn("No token provided, eventbrite api won't be available");
+    }
+
+    @Route(uri = "/events", method = HttpMethod.GET)
     @Async
     public Result events() throws IOException {
-       return ramaining("/v3/events/search/", "&organizer.id=1464915124");
+        return eventBriteCall(RequestBuilder.withToken(token).events());
     }
 
-    @Route(uri="/attendees/{id}", method = HttpMethod.GET)
+    @Route(uri = "/attendees/{id}", method = HttpMethod.GET)
     @Async
     public Result attendee(@PathParameter("id") String id) throws IOException {
-        return ramaining("/v3/events/"+id+"/attendees/", "");
+        return eventBriteCall(RequestBuilder.withToken(token).attendees(id));
     }
 
-    public Result ramaining(String url, String extra) throws IOException {
 
-        CloseableHttpClient httpclient = HttpClients.createDefault();
-        try {
-            HttpGet httpget = new HttpGet("https://www.eventbriteapi.com"+url+"?token="+token+extra);
+    /**
+     * EventBrite call to API in a new thread.
+     * @param rb
+     * @return
+     * @throws IOException
+     */
+    public Result eventBriteCall(WithToken rb) throws IOException {
 
-            // Create a custom response handler
-            ResponseHandler<Result> responseHandler = new ResponseHandler<Result>() {
+        if (token == null)
+            return status(Status.SERVICE_UNAVAILABLE);
 
-                @Override
-                public Result handleResponse(
-                        final HttpResponse response) throws ClientProtocolException, IOException {
-                    int status = response.getStatusLine().getStatusCode();
-                    if (status >= 200 && status < 300) {
-                        HttpEntity entity = response.getEntity();
-                        return entity != null ? ok(EntityUtils.toString(entity)) : noContent();
-                    } else {
-                        throw new ClientProtocolException("Unexpected response status: " + status);
+        PipedOutputStream outputStream = new PipedOutputStream();
+        PipedInputStream inputStream = new PipedInputStream(outputStream);
+
+        new Thread() {
+            @Override
+            public void run() {
+                CloseableHttpClient httpclient = HttpClients.createDefault();
+                try {
+                    HttpGet httpget = new HttpGet(rb.build());
+
+                    // Create a custom response handler
+                    ResponseHandler<Result> responseHandler = response -> toResult(response, outputStream);
+
+                    httpclient.execute(httpget, responseHandler);
+                } catch (ClientProtocolException e) {
+                    logger().error(rb.build(), e);
+                } catch (IOException e) {
+                    logger().error(rb.build(), e);
+                } finally {
+                    try {
+                        httpclient.close();
+                    } catch (IOException e) {
+                        logger().error(rb.build(), e);
                     }
                 }
 
-            };
-            return httpclient.execute(httpget, responseHandler);
-        } finally {
-            httpclient.close();
-        }
+            }
+        }.start();
 
+        return ok(inputStream).json();
 
 
     }
-///v3/
+
+    private Result toResult(HttpResponse response, PipedOutputStream outputStream) throws IOException {
+        Result result = new Result(response.getStatusLine().getStatusCode());
+        // Copy headers
+        for (Header h : response.getAllHeaders()) {
+            result.with(h.getName(), h.getValue());
+        }
+
+        HttpEntity entity = response.getEntity();
+        if (entity != null) {
+            IOUtils.copyAndDoNotCloseInputStream(entity.getContent(), outputStream);
+            outputStream.close();
+
+        }
+
+        return result;
+    }
+
+
+    static class RequestBuilder implements WithToken {
+
+        private final String token;
+
+        private String uri;
+
+        public static WithToken withToken(String token) {
+            return new RequestBuilder(token);
+        }
+
+        private RequestBuilder(String token) {
+            this.token = token;
+        }
+
+        private Map<String, String> params = new LinkedHashMap<>();
+
+        public WithToken events() {
+            this.uri = "/v3/events/search/";
+            return withParam("organizer.id", "1464915124");
+        }
+
+        @Override
+        public WithToken attendees(String eventId) {
+            this.uri = "/v3/events/" + eventId + "/attendees/";
+            return this;
+        }
+
+        public WithToken withParam(String name, String value) {
+            params.put(name, value);
+            return this;
+        }
+
+        /**
+         * Build request for EventBrite API.
+         *
+         * @return
+         */
+        public String build() {
+            if (params.isEmpty())
+                return EVENT_BRITE_API + uri + "?token=" + token;
+
+            StringBuilder stringBuilder = new StringBuilder(EVENT_BRITE_API)
+                    .append(uri)
+                    .append("?token=").append(token);
+
+            for (Map.Entry<String, String> param : params.entrySet()) {
+                stringBuilder.append('&')
+                        .append(param.getKey()).append('=').append(param.getValue());
+            }
+            return stringBuilder.toString();
+        }
+    }
+
+    public interface WithToken {
+
+        WithToken events();
+
+        WithToken attendees(String eventId);
+
+        WithToken withParam(String name, String value);
+
+        String build();
+    }
 }
