@@ -1,131 +1,211 @@
 package org.jug.montpellier.cartridges.events.services;
 
-import com.typesafe.config.ConfigException;
-import org.apache.aries.util.io.IOUtils;
+import com.google.common.reflect.TypeToken;
+import com.jayway.jsonpath.JsonPath;
+import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
+import org.apache.felix.ipojo.annotations.Component;
+import org.apache.felix.ipojo.annotations.Instantiate;
+import org.apache.felix.ipojo.annotations.Provides;
 import org.apache.felix.ipojo.annotations.Requires;
-import org.apache.felix.ipojo.util.StreamUtils;
 import org.apache.http.*;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
-import org.wisdom.api.DefaultController;
-import org.wisdom.api.annotations.Controller;
-import org.wisdom.api.annotations.Path;
-import org.wisdom.api.annotations.PathParameter;
-import org.wisdom.api.annotations.Route;
-import org.wisdom.api.annotations.scheduler.Async;
-import org.wisdom.api.bodies.RenderableStream;
+import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
+import org.apache.http.impl.nio.client.HttpAsyncClients;
+import org.apache.http.nio.IOControl;
+import org.apache.http.nio.client.methods.AsyncCharConsumer;
+import org.apache.http.nio.client.methods.HttpAsyncMethods;
+import org.apache.http.protocol.HttpContext;
+import org.joda.time.Duration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.wisdom.api.cache.Cache;
-import org.wisdom.api.http.HttpMethod;
-import org.wisdom.api.http.Result;
-import org.wisdom.api.http.Status;
+import org.wisdom.api.configuration.Configuration;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
-import java.net.InetAddress;
+import java.nio.CharBuffer;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.*;
 
 /**
  * Created by cheleb on 17/06/15.
  */
-@Controller
-@Path("/eventbrite")
-public class EventBriteService extends DefaultController {
+@Component
+@Provides
+@Instantiate
+public class EventBriteService {
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(EventBriteService.class);
 
     private String token;
 
     @Requires
+    private Configuration configuration;
+
+    @Requires
     private Cache cache;
+
+    private ExecutorService executorService = Executors.newCachedThreadPool();
+
 
     private static String EVENT_BRITE_API = "https://www.eventbriteapi.com";
 
     {
         token = System.getProperty("token");
         if (token == null)
-            logger().warn("No token provided, eventbrite api won't be available");
-    }
-
-    @Route(uri = "/events", method = HttpMethod.GET)
-    @Async
-    public Result events() throws IOException {
-        return eventBriteCall(RequestBuilder.withToken(token).events());
-    }
-
-    @Route(uri = "/attendees/{id}", method = HttpMethod.GET)
-    @Async
-    public Result attendee(@PathParameter("id") String id) throws IOException {
-        return eventBriteCall(RequestBuilder.withToken(token).attendees(id));
+            LOGGER.warn("No token provided, eventbrite api won't be available");
     }
 
 
-    /**
-     * EventBrite call to API in a new thread.
-     * @param rb
-     * @return
-     * @throws IOException
-     */
-    public Result eventBriteCall(WithToken rb) throws IOException {
-
-        if (token == null)
-            return status(Status.SERVICE_UNAVAILABLE);
+    public List<Profile> attendees(String eventId) throws IOException {
+        List<Profile> cached = cache.get(attenteesCacheKey(eventId));
+        if (cached != null) {
+            LOGGER.debug("Found " + cached.size() + " attendee(s) in cache.");
+            return cached;
+        }
+        WithToken withToken = RequestBuilder.withToken(token).attendees(eventId);
 
         PipedOutputStream outputStream = new PipedOutputStream();
         PipedInputStream inputStream = new PipedInputStream(outputStream);
 
-        new Thread() {
-            @Override
-            public void run() {
-                CloseableHttpClient httpclient = HttpClients.createDefault();
-                try {
-                    HttpGet httpget = new HttpGet(rb.build());
+        executorService.submit(() -> eventBriteRequest(withToken, new StreamConsumer(outputStream)));
 
-                    // Create a custom response handler
-                    ResponseHandler<Result> responseHandler = response -> toResult(response, outputStream);
 
-                    httpclient.execute(httpget, responseHandler);
-                } catch (ClientProtocolException e) {
-                    logger().error(rb.build(), e);
-                } catch (IOException e) {
-                    logger().error(rb.build(), e);
-                } finally {
-                    try {
-                        httpclient.close();
-                    } catch (IOException e) {
-                        logger().error(rb.build(), e);
-                    }
-                }
+        TypeToken<List<Profile>> typeToken = new TypeToken<List<Profile>>() {
+        };
+        JSONArray array = JsonPath.parse(inputStream).read("$.attendees[*].profile");
 
+        List<Profile> list = new ArrayList<>();
+
+        for (Object o: array){
+            LinkedHashMap p = (LinkedHashMap) o;
+            Profile profile = new Profile();
+            profile.setLast_name((String) p.get("last_name"));
+            profile.setFirst_name((String) p.get("first_name"));
+            profile.setEmail((String) p.get("email"));
+            list.add(profile);
+        }
+
+        cache.set(attenteesCacheKey(eventId), list, Duration.standardSeconds(configuration.getIntegerWithDefault("eventbrite.cache", 60)));
+
+
+        LOGGER.debug("Put " + list.size() + " attendee in cache.");
+
+
+
+        return list;
+    }
+
+
+    public List<Event> events() throws IOException {
+
+        List<Event> cached = cache.get("events");
+
+        if (cached != null) {
+            LOGGER.debug("Found " + cached.size() + " events in cache.");
+            return cached;
+        }
+
+        WithToken withToken = RequestBuilder.withToken(token).events();
+
+        PipedOutputStream outputStream = new PipedOutputStream();
+        PipedInputStream inputStream = new PipedInputStream(outputStream);
+
+        executorService.submit(() -> eventBriteRequest(withToken, new StreamConsumer(outputStream)));
+
+
+        TypeToken<List<Event>> typeToken = new TypeToken<List<Event>>() {
+        };
+        JSONArray read = JsonPath.parse(inputStream).read("$.events[*]");
+
+        List<Event> res = new ArrayList<>();
+
+        for (Object o : read) {
+            LinkedHashMap json = (LinkedHashMap) o;
+            Event event = new Event();
+            event.setId((String) json.get("id"));
+
+            LinkedHashMap name = (LinkedHashMap) json.get("name");
+            if (name == null)
+                event.setName("No name");
+            else
+                event.setName((String) name.get("text"));
+            res.add(event);
+        }
+
+        cache.set("events", res, Duration.standardSeconds(configuration.getIntegerWithDefault("eventbrite.cache", 60)));
+
+        LOGGER.debug("Put " + res.size() + " events in cache.");
+
+        return res;
+    }
+
+    private String attenteesCacheKey(String eventId) {
+        return "attentees-" + eventId;
+    }
+
+    public void eventBriteRequest(WithToken rb, AsyncCharConsumer<Boolean> responseConsumer) {
+
+        String request = rb.build();
+
+        try (CloseableHttpAsyncClient httpclient = HttpAsyncClients.createDefault()) {
+            httpclient.start();
+            Future<Boolean> future = httpclient.execute(
+                    HttpAsyncMethods.createGet(request),
+                    responseConsumer, null);
+            Boolean result = future.get();
+            if (result != null && result.booleanValue()) {
+                LOGGER.debug("Request successfully executed: " + request);
+            } else {
+                LOGGER.warn("Request failed: " + request);
             }
-        }.start();
-
-        return ok(inputStream).json();
-
+            LOGGER.debug("Shutting down");
+        } catch (IOException | InterruptedException | ExecutionException e) {
+            LOGGER.error(request, e);
+        }
 
     }
 
-    private Result toResult(HttpResponse response, PipedOutputStream outputStream) throws IOException {
-        Result result = new Result(response.getStatusLine().getStatusCode());
-        // Copy headers
-        for (Header h : response.getAllHeaders()) {
-            result.with(h.getName(), h.getValue());
+
+    static class StreamConsumer extends AsyncCharConsumer<Boolean> {
+
+        private final OutputStream outputStream;
+
+        StreamConsumer(OutputStream outputStream) {
+            this.outputStream = outputStream;
         }
 
-        HttpEntity entity = response.getEntity();
-        if (entity != null) {
-            IOUtils.copyAndDoNotCloseInputStream(entity.getContent(), outputStream);
-            outputStream.close();
-
+        @Override
+        protected void onResponseReceived(final HttpResponse response) {
         }
 
-        return result;
+        @Override
+        protected void onCharReceived(final CharBuffer buf, final IOControl ioctrl) throws IOException {
+            while (buf.hasRemaining()) {
+                outputStream.write(buf.get());
+            }
+        }
+
+        @Override
+        protected void releaseResources() {
+            try {
+                outputStream.close();
+            } catch (IOException e) {
+                LOGGER.warn(e.getLocalizedMessage(), e);
+            }
+        }
+
+        @Override
+        protected Boolean buildResult(final HttpContext context) {
+            return Boolean.TRUE;
+        }
+
     }
-
 
     static class RequestBuilder implements WithToken {
 
