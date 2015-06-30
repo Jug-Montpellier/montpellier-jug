@@ -1,21 +1,15 @@
 package org.jug.montpellier.jobs;
 
-import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 import org.apache.felix.ipojo.annotations.Component;
 import org.apache.felix.ipojo.annotations.Instantiate;
 import org.apache.felix.ipojo.annotations.Provides;
 import org.apache.felix.ipojo.annotations.Requires;
-import org.jug.montpellier.models.Yearpartner;
 import org.montpellierjug.store.jooq.tables.daos.YearpartnerDao;
-import org.montpellierjug.store.jooq.tables.interfaces.IYearpartner;
 import org.ow2.chameleon.mail.Mail;
 import org.ow2.chameleon.mail.MailSenderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wisdom.api.Controller;
 import org.wisdom.api.DefaultController;
 import org.wisdom.api.annotations.View;
 import org.wisdom.api.annotations.scheduler.Every;
@@ -37,8 +31,10 @@ import java.util.stream.Collectors;
 @Instantiate
 public class ExpiringPartnerJob implements Scheduled {
 
+    private static final Long DEFAULT_EXPIRING_TIMESTAMP = 2592000000l;
+    private static final String DEFAULT_EMAIL_TO = "jug-leaders-montpellier@googlegroups.com";
+    private static final String EXPIRING_MAIL_SUBJECT = "Expiring Partners Alert";
     private static Logger logger = LoggerFactory.getLogger(ExpiringPartnerJob.class);
-
     @View("mail/expiringPartner")
     private Template expiringTemplate;
 
@@ -53,28 +49,36 @@ public class ExpiringPartnerJob implements Scheduled {
 
     @Every(period = 7, unit = TimeUnit.DAYS)
     public void execute() throws Exception {
-        Timestamp timestampToCheck = new Timestamp(configuration.get("batch.expiringPartners.timestampToCheck", Long.class, 2592000000l));
-        Timestamp currentTimestamp = new Timestamp(Calendar.getInstance().getTimeInMillis());
-        Timestamp expiryTimestamp = new Timestamp(currentTimestamp.getTime() + timestampToCheck.getTime());
+        logger.info("Expiring partner job start");
+        // Configuration of job
+        final String emailTo = configuration.getWithDefault("jobs.expiringPartners.emailTo", DEFAULT_EMAIL_TO);
+        final Timestamp timestampToCheck = new Timestamp(configuration.get("jobs.expiringPartners.timestampToCheck", Long.class, DEFAULT_EXPIRING_TIMESTAMP));
+
+        // Default values used in search of expiring partners
+        final Timestamp currentTimestamp = new Timestamp(Calendar.getInstance().getTimeInMillis());
+        final Timestamp expiryTimestamp = new Timestamp(currentTimestamp.getTime() + timestampToCheck.getTime());
+
+        // Searching the expiring partners
         List<ExpiringPartnerJobItem> expiringPartners =
-                yearpartnerDao.findAll().stream().filter(partner ->
-                            partner.getStopdate().after(currentTimestamp) &&
-                                partner.getStopdate().before(expiryTimestamp))
+                yearpartnerDao.findAll().stream()
+                        .filter(partner ->
+                                partner.getStopdate().after(currentTimestamp) && partner.getStopdate().before(expiryTimestamp))
                         .map(partner -> new ExpiringPartnerJobItem()
                                 .setName(partner.getName())
                                 .setLogo(partner.getLogourl())
-                                .setExpiringTime((int)(partner.getStopdate().getTime() - currentTimestamp.getTime()) / 86400000))
+                                        // Compute number of days before the expiration of the partnership
+                                .setExpiringTime((int) (partner.getStopdate().getTime() - currentTimestamp.getTime()) / 86400000))
                         .collect(Collectors.toList());
 
-
-
         if (!expiringPartners.isEmpty()) {
+            logger.info("Detected expiring partners, send email to inform.");
             mailer.send(
                     new Mail()
-                            .to("francois.teychene@gmail.com").subject("Expiring Partners")
-                    .body(expiringTemplate.render(new DefaultController(), ImmutableMap.of("partners", expiringPartners)).content().toString()));
-            System.out.println(expiringTemplate.render(new DefaultController(), ImmutableMap.of("partners", Lists.partition(expiringPartners, 3))).content().toString());
+                            .to(emailTo).subject(EXPIRING_MAIL_SUBJECT)
+                            .body(expiringTemplate.render(new DefaultController(), ImmutableMap.of("partners", expiringPartners)).content().toString()));
+
         }
+        logger.info("Expiring partner job done");
     }
 
     public class ExpiringPartnerJobItem {
