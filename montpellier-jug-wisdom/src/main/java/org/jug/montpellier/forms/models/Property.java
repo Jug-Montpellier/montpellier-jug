@@ -1,7 +1,6 @@
 package org.jug.montpellier.forms.models;
 
 import org.jug.montpellier.forms.apis.EditorService;
-import org.jug.montpellier.forms.services.editors.base.NotImplementedEditorService;
 
 /**
  * Created by Eric Taix on 04/06/15.

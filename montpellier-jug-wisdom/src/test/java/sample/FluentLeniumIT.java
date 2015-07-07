@@ -22,8 +22,6 @@ package sample;
 import org.junit.Test;
 import org.wisdom.test.parents.WisdomFluentLeniumTest;
 
-import static org.fluentlenium.assertj.FluentLeniumAssertions.assertThat;
-
 /**
  * A UI Test checking that the page contains the correct element.
  * This test is executed in a browser.

@@ -1,10 +1,10 @@
 package org.jug.montpellier.forms.apis;
 
-import org.wisdom.api.Controller;
-import org.wisdom.api.http.Renderable;
-
 import java.util.List;
 import java.util.Map;
+
+import org.wisdom.api.Controller;
+import org.wisdom.api.http.Renderable;
 
 /**
  * Created by Eric Taix on 24/03/15.

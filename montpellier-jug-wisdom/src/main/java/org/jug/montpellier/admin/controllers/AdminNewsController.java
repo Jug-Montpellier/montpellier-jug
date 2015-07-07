@@ -1,6 +1,10 @@
 package org.jug.montpellier.admin.controllers;
 
-import com.google.common.collect.Maps;
+import java.beans.IntrospectionException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.felix.ipojo.annotations.Requires;
 import org.jooq.DSLContext;
 import org.jooq.SelectOrderByStep;
@@ -12,7 +16,13 @@ import org.jug.montpellier.forms.apis.PropertySheet;
 import org.jug.montpellier.models.News;
 import org.montpellierjug.store.jooq.Tables;
 import org.montpellierjug.store.jooq.tables.daos.NewsDao;
-import org.wisdom.api.annotations.*;
+import org.wisdom.api.annotations.Body;
+import org.wisdom.api.annotations.Controller;
+import org.wisdom.api.annotations.Parameter;
+import org.wisdom.api.annotations.Path;
+import org.wisdom.api.annotations.QueryParameter;
+import org.wisdom.api.annotations.Route;
+import org.wisdom.api.annotations.View;
 import org.wisdom.api.http.HttpMethod;
 import org.wisdom.api.http.Result;
 import org.wisdom.api.security.Authenticated;
@@ -20,10 +30,7 @@ import org.wisdom.api.templates.Template;
 import org.wisdom.oauth2.OAuth2WisdomAuthenticator;
 import org.wisdom.oauth2.controller.Role;
 
-import java.beans.IntrospectionException;
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
-import java.util.Map;
+import com.google.common.collect.Maps;
 
 /**
  * Created by fteychene on 04/06/2015.

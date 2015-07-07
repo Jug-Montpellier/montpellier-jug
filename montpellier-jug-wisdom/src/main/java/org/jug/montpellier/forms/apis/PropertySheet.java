@@ -1,11 +1,9 @@
 package org.jug.montpellier.forms.apis;
 
+import java.util.Map;
+
 import org.wisdom.api.Controller;
 import org.wisdom.api.http.Renderable;
-
-import java.beans.IntrospectionException;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Map;
 
 /**
  * Created by Eric Taix on 07/03/2015.

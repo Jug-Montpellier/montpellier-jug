@@ -1,15 +1,8 @@
 package org.montpellierjug.store;
 
-import org.jooq.Configuration;
-import org.jooq.ConnectionProvider;
-import org.jooq.DSLContext;
-import org.jooq.exception.DataAccessException;
-import org.jooq.impl.DefaultConfiguration;
 import org.junit.Test;
 import org.montpellierjug.store.jooq.tables.daos.TagDao;
 import org.montpellierjug.store.jooq.tables.pojos.Tag;
-
-import java.sql.Connection;
 
 /**
  * Created by chelebithil on 06/03/15.

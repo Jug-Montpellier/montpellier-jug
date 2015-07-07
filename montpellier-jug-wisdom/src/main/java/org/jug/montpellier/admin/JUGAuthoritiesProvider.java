@@ -1,5 +1,9 @@
 package org.jug.montpellier.admin;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+
 import org.apache.felix.ipojo.annotations.Component;
 import org.apache.felix.ipojo.annotations.Instantiate;
 import org.apache.felix.ipojo.annotations.Provides;
@@ -9,10 +13,6 @@ import org.montpellierjug.store.jooq.tables.pojos.Speaker;
 import org.wisdom.api.http.Result;
 import org.wisdom.api.interception.RequestContext;
 import org.wisdom.oauth2.controller.AuthorityProvider;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Created by chelebithil on 14/03/15.

@@ -1,14 +1,24 @@
 package org.jug.montpellier.cartridges.events.services;
 
-import com.google.common.reflect.TypeToken;
-import com.jayway.jsonpath.JsonPath;
-import net.minidev.json.JSONArray;
-import net.minidev.json.JSONObject;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
+import java.nio.CharBuffer;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
 import org.apache.felix.ipojo.annotations.Component;
 import org.apache.felix.ipojo.annotations.Instantiate;
 import org.apache.felix.ipojo.annotations.Provides;
 import org.apache.felix.ipojo.annotations.Requires;
-import org.apache.http.*;
+import org.apache.http.HttpResponse;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
 import org.apache.http.nio.IOControl;
@@ -21,16 +31,10 @@ import org.slf4j.LoggerFactory;
 import org.wisdom.api.cache.Cache;
 import org.wisdom.api.configuration.Configuration;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
-import java.nio.CharBuffer;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.*;
+import com.google.common.reflect.TypeToken;
+import com.jayway.jsonpath.JsonPath;
+
+import net.minidev.json.JSONArray;
 
 /**
  * Created by cheleb on 17/06/15.
@@ -131,11 +135,13 @@ public class EventBriteService {
             event.setId((String) json.get("id"));
 
             LinkedHashMap name = (LinkedHashMap) json.get("name");
+/*
             if (name == null)
                 event.setName("No name");
             else
                 event.setName((String) name.get("text"));
             res.add(event);
+*/
         }
 
         cache.set("events", res, Duration.standardSeconds(configuration.getIntegerWithDefault("eventbrite.cache", 60)));

@@ -19,10 +19,9 @@
  */
 package sample;
 
-import org.junit.Test;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
+
+import org.junit.Test;
 
 /**
  * A couple of unit tests.
@@ -57,4 +56,8 @@ public class UnitTest {
 //        Result result = controller.welcome();
 //        assertThat(result.getStatusCode()).isEqualTo(Status.OK);
     }
+
+
+   
+   
 }

@@ -1,8 +1,8 @@
 package org.montpellierjug.store;
 
-import org.flywaydb.core.Flyway;
-
 import javax.sql.DataSource;
+
+import org.flywaydb.core.Flyway;
 
 /**
  * Created by chelebithil on 05/03/15.

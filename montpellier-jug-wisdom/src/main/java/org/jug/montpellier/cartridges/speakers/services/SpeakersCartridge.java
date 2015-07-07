@@ -6,7 +6,6 @@ import org.apache.felix.ipojo.annotations.Provides;
 import org.apache.felix.ipojo.annotations.Requires;
 import org.jug.montpellier.cartridges.speakers.controllers.SpeakersController;
 import org.jug.montpellier.core.api.Cartridge;
-import org.montpellierjug.store.jooq.tables.pojos.Speaker;
 import org.wisdom.api.router.Router;
 
 @Component

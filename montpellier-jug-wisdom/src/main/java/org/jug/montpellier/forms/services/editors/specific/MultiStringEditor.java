@@ -1,19 +1,16 @@
 package org.jug.montpellier.forms.services.editors.specific;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.jug.montpellier.forms.apis.Editor;
 import org.jug.montpellier.forms.apis.EditorService;
 import org.jug.montpellier.forms.models.PropertyValue;
 import org.jug.montpellier.forms.services.editors.base.BaseEditor;
-import org.montpellierjug.store.jooq.tables.daos.EventDao;
 import org.wisdom.api.Controller;
 import org.wisdom.api.http.Renderable;
 import org.wisdom.api.templates.Template;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Created by fteychene on 04/06/2015

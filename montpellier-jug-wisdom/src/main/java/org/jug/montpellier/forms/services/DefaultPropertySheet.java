@@ -1,14 +1,13 @@
 package org.jug.montpellier.forms.services;
 
-import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Maps;
+import java.util.Map;
+
 import org.apache.felix.ipojo.annotations.Component;
 import org.apache.felix.ipojo.annotations.Instantiate;
 import org.apache.felix.ipojo.annotations.Provides;
 import org.apache.felix.ipojo.annotations.Requires;
-import org.jug.montpellier.forms.apis.*;
-import org.jug.montpellier.forms.models.PropertyValue;
+import org.jug.montpellier.forms.apis.IntrospectorRegistry;
+import org.jug.montpellier.forms.apis.PropertySheet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wisdom.api.Controller;
@@ -16,13 +15,8 @@ import org.wisdom.api.annotations.View;
 import org.wisdom.api.http.Renderable;
 import org.wisdom.api.templates.Template;
 
-import java.beans.IntrospectionException;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Maps;
 
 /**
  * Created by Eric Taix on 07/03/2015.

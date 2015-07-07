@@ -1,9 +1,9 @@
 package org.jug.montpellier.forms.services.introspector;
 
-import org.yaml.snakeyaml.Yaml;
-
 import java.io.InputStream;
 import java.util.HashMap;
+
+import org.yaml.snakeyaml.Yaml;
 
 /**
  * Created by Eric Taix on 04/06/15.

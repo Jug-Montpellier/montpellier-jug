@@ -1,14 +1,14 @@
 package org.jug.montpellier.forms.services;
 
-import org.apache.felix.ipojo.annotations.Component;
-import org.apache.felix.ipojo.annotations.Instantiate;
-import org.apache.felix.ipojo.annotations.Provides;
-import org.wisdom.api.content.ParameterConverter;
-
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import org.apache.felix.ipojo.annotations.Component;
+import org.apache.felix.ipojo.annotations.Instantiate;
+import org.apache.felix.ipojo.annotations.Provides;
+import org.wisdom.api.content.ParameterConverter;
 
 /**
  * Created by Eric Taix on 23/03/15.
