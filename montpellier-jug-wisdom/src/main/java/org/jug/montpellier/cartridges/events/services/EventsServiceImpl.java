@@ -1,5 +1,10 @@
 package org.jug.montpellier.cartridges.events.services;
 
+import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.apache.felix.ipojo.annotations.Component;
 import org.apache.felix.ipojo.annotations.Instantiate;
 import org.apache.felix.ipojo.annotations.Provides;
@@ -15,11 +20,6 @@ import org.montpellierjug.store.jooq.tables.interfaces.IEvent;
 import org.montpellierjug.store.jooq.tables.interfaces.ISpeaker;
 import org.montpellierjug.store.jooq.tables.interfaces.ITalk;
 import org.wisdom.api.http.Result;
-
-import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by manland on 26/04/15.

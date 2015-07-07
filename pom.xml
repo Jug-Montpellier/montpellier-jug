@@ -1,345 +1,358 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  #%L
-  Wisdom-Framework
-  %%
-  Copyright (C) 2013 - 2014 Wisdom Framework
-  %%
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-  
-       http://www.apache.org/licenses/LICENSE-2.0
-  
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-  #L%
-  -->
+<!-- #%L Wisdom-Framework %% Copyright (C) 2013 - 2014 Wisdom Framework %% 
+  Licensed under the Apache License, Version 2.0 (the "License"); you may not 
+  use this file except in compliance with the License. You may obtain a copy 
+  of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required 
+  by applicable law or agreed to in writing, software distributed under the 
+  License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS 
+  OF ANY KIND, either express or implied. See the License for the specific 
+  language governing permissions and limitations under the License. #L% -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.montpellier-jug</groupId>
-    <artifactId>montpellier-jug</artifactId>
-    <version>1.0-SNAPSHOT</version>
+  <groupId>org.montpellier-jug</groupId>
+  <artifactId>montpellier-jug</artifactId>
+  <version>1.0-SNAPSHOT</version>
 
-    <packaging>pom</packaging>
+  <packaging>pom</packaging>
 
-    <properties>
+  <properties>
 
-      <wisdom.version>0.9.1</wisdom.version>
-      <spring.version>4.1.2.RELEASE_1</spring.version>
-      <wisdom-postgresql.version>9.1-902.jdbc4_1</wisdom-postgresql.version>
-      <wisdom-activiti.version>1.0.3-SNAPSHOT</wisdom-activiti.version>
-      <wisdom-oauth2-authenticator.version>1.1-SNAPSHOT</wisdom-oauth2-authenticator.version>
-      <wisdom-oauth2-controller.version>1.1-SNAPSHOT</wisdom-oauth2-controller.version>
-      <flyway.version>3.2.1</flyway.version>
-      <java.version>1.8</java.version>
-      <ipojo.version>1.12.1</ipojo.version>
-      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-      <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <wisdom.version>0.9.1</wisdom.version>
+    <spring.version>4.1.2.RELEASE_1</spring.version>
+    <wisdom-postgresql.version>9.1-902.jdbc4_1</wisdom-postgresql.version>
+    <wisdom-activiti.version>1.0.3-SNAPSHOT</wisdom-activiti.version>
+    <wisdom-oauth2-authenticator.version>1.2-SNAPSHOT</wisdom-oauth2-authenticator.version>
+    <wisdom-oauth2-controller.version>1.2-SNAPSHOT</wisdom-oauth2-controller.version>
+    <flyway.version>3.2.1</flyway.version>
+    <java.version>1.8</java.version>
+    <ipojo.version>1.12.1</ipojo.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-    </properties>
+  </properties>
 
 
-    <modules>
-     <module>montpellier-jug-database</module>
-     <module>montpellier-jug-wisdom</module>
-     <module>montpellier-jug-store</module>
-    </modules>
+  <modules>
+    <module>montpellier-jug-database</module>
+    <module>montpellier-jug-store</module>
+    <module>montpellier-jug-wisdom</module>
+  </modules>
 
+  <dependencies>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+
+    <!-- Test dependencies -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-all</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.fluentlenium</groupId>
+      <artifactId>fluentlenium-assertj</artifactId>
+    </dependency>
+    <dependency>
+      <!-- slf4j binding used for tests -->
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-jcl</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- Additional applications -->
+  </dependencies>
+
+  <dependencyManagement>
     <dependencies>
+      <dependency>
+        <!-- Define all the versions of the dependencies provided by Wisdom -->
+        <groupId>org.wisdom-framework</groupId>
+        <artifactId>wisdom-bom</artifactId>
+        <version>${wisdom.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
 
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
+      <dependency>
+        <groupId>org.apache.oltu.oauth2</groupId>
+        <artifactId>org.apache.oltu.oauth2.client</artifactId>
+        <version>1.0.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.httpcomponents</groupId>
+        <artifactId>httpclient</artifactId>
+        <version>4.3.4</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>org.apache.felix.fileinstall</artifactId>
+        <version>3.4.2</version>
+      </dependency>
 
-        <!-- Test dependencies -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.fluentlenium</groupId>
-            <artifactId>fluentlenium-assertj</artifactId>
-        </dependency>
-        <dependency>
-            <!-- slf4j binding used for tests -->
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-jcl</artifactId>
-            <version>1.7.9</version>
-            <scope>test</scope>
-        </dependency>
+      <dependency>
+        <groupId>org.wisdom-framework</groupId>
+        <artifactId>wisdom-mustache-template-engine</artifactId>
+        <version>0.7</version>
+      </dependency>
 
-        <!-- Additional applications -->
+      <dependency>
+        <groupId>org.wisdom-framework</groupId>
+        <artifactId>wisdom-jdbc-datasources</artifactId>
+        <version>0.5</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.wisdom-framework</groupId>
+        <artifactId>postgresql</artifactId>
+        <version>${wisdom-postgresql.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>fr.geosud.register</groupId>
+        <artifactId>geosud-register-store</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.aries.proxy</groupId>
+        <artifactId>org.apache.aries.proxy</artifactId>
+        <version>1.0.1</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.aries.blueprint</groupId>
+        <artifactId>org.apache.aries.blueprint</artifactId>
+        <version>1.1.0</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.aries</groupId>
+        <artifactId>org.apache.aries.util</artifactId>
+        <version>1.1.0</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.geronimo.specs</groupId>
+        <artifactId>geronimo-jpa_2.0_spec</artifactId>
+        <version>1.1</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.servicemix.bundles</groupId>
+        <artifactId>org.apache.servicemix.bundles.aopalliance</artifactId>
+        <version>1.0_6</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.servicemix.bundles</groupId>
+        <artifactId>org.apache.servicemix.bundles.spring-beans</artifactId>
+        <version>${spring.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.servicemix.bundles</groupId>
+        <artifactId>org.apache.servicemix.bundles.spring-context</artifactId>
+        <version>${spring.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.servicemix.bundles</groupId>
+        <artifactId>org.apache.servicemix.bundles.spring-context-support</artifactId>
+        <version>${spring.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.servicemix.bundles</groupId>
+        <artifactId>org.apache.servicemix.bundles.spring-core</artifactId>
+        <version>${spring.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.servicemix.bundles</groupId>
+        <artifactId>org.apache.servicemix.bundles.spring-jdbc</artifactId>
+        <version>${spring.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.servicemix.bundles</groupId>
+        <artifactId>org.apache.servicemix.bundles.spring-tx</artifactId>
+        <version>${spring.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.servicemix.bundles</groupId>
+        <artifactId>org.apache.servicemix.bundles.spring-orm</artifactId>
+        <version>${spring.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.servicemix.bundles</groupId>
+        <artifactId>org.apache.servicemix.bundles.spring-aop</artifactId>
+        <version>${spring.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.servicemix.transaction</groupId>
+        <artifactId>org.apache.servicemix.transaction</artifactId>
+        <version>1.2.0</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>com.jayway.jsonpath</groupId>
+        <artifactId>json-path</artifactId>
+        <version>2.0.0</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.google.code.gson</groupId>
+        <artifactId>gson</artifactId>
+        <version>2.3.1</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.servicemix.bundles</groupId>
+        <artifactId>org.apache.servicemix.bundles.spring-aspects</artifactId>
+        <version>4.1.2.RELEASE_1</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.servicemix.bundles</groupId>
+        <artifactId>org.apache.servicemix.bundles.aspectj</artifactId>
+        <version>1.8.4_1</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>3.3</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.webjars</groupId>
+        <artifactId>bootstrap</artifactId>
+        <version>3.1.1</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.webjars</groupId>
+        <artifactId>jquery</artifactId>
+        <version>2.1.0-2</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>1.7.2</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.wisdom-framework.oauth2</groupId>
+        <artifactId>wisdom-oauth2-authenticator</artifactId>
+        <version>${wisdom-oauth2-authenticator.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.wisdom-framework.oauth2</groupId>
+        <artifactId>wisdom-oauth2-controller</artifactId>
+        <version>${wisdom-oauth2-controller.version}</version>
+      </dependency>
+
+      <dependency>
+        <!-- slf4j binding used for tests -->
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-jcl</artifactId>
+        <version>1.7.6</version>
+      </dependency>
+
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.11</version>
+        <scope>test</scope>
+      </dependency>
     </dependencies>
+  </dependencyManagement>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <!-- Define all the versions of the dependencies provided by Wisdom -->
-                <groupId>org.wisdom-framework</groupId>
-                <artifactId>wisdom-bom</artifactId>
-                <version>${wisdom.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
+  <build>
 
-          <dependency>
-            <groupId>org.apache.oltu.oauth2</groupId>
-            <artifactId>org.apache.oltu.oauth2.client</artifactId>
-            <version>1.0.0</version>
-          </dependency>
-            <dependency>
-                <groupId>org.apache.httpcomponents</groupId>
-                <artifactId>httpclient</artifactId>
-                <version>4.3.4</version>
-            </dependency>
-          <dependency>
-            <groupId>org.apache.felix</groupId>
-            <artifactId>org.apache.felix.fileinstall</artifactId>
-            <version>3.4.2</version>
-          </dependency>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>1.4</version>
+        <executions>
+          <execution>
+            <id>enforce-java</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireJavaVersion>
+                  <version>1.8.0</version>
+                </requireJavaVersion>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+        
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+      </plugin>
+    </plugins>
 
-           <dependency>
-						 <groupId>org.wisdom-framework</groupId>
-						 <artifactId>wisdom-mustache-template-engine</artifactId>
-						 <version>0.7</version>
-					 </dependency>
-
-          <dependency>
-            <groupId>org.wisdom-framework</groupId>
-            <artifactId>wisdom-jdbc-datasources</artifactId>
-            <version>0.5</version>
-          </dependency>
-
-          <dependency>
-            <groupId>org.wisdom-framework</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>${wisdom-postgresql.version}</version>
-          </dependency>
-
-          <dependency>
-            <groupId>fr.geosud.register</groupId>
-            <artifactId>geosud-register-store</artifactId>
-            <version>${project.version}</version>
-          </dependency>
-
-          <dependency>
-            <groupId>org.apache.aries.proxy</groupId>
-            <artifactId>org.apache.aries.proxy</artifactId>
-            <version>1.0.1</version>
-          </dependency>
-
-          <dependency>
-            <groupId>org.apache.aries.blueprint</groupId>
-            <artifactId>org.apache.aries.blueprint</artifactId>
-            <version>1.1.0</version>
-          </dependency>
-
-          <dependency>
-            <groupId>org.apache.aries</groupId>
-            <artifactId>org.apache.aries.util</artifactId>
-            <version>1.1.0</version>
-          </dependency>
-
-          <dependency>
-            <groupId>org.apache.geronimo.specs</groupId>
-            <artifactId>geronimo-jpa_2.0_spec</artifactId>
-            <version>1.1</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.servicemix.bundles</groupId>
-            <artifactId>org.apache.servicemix.bundles.aopalliance</artifactId>
-            <version>1.0_6</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.servicemix.bundles</groupId>
-            <artifactId>org.apache.servicemix.bundles.spring-beans</artifactId>
-            <version>${spring.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.servicemix.bundles</groupId>
-            <artifactId>org.apache.servicemix.bundles.spring-context</artifactId>
-            <version>${spring.version}</version>
-          </dependency>
-
-          <dependency>
-            <groupId>org.apache.servicemix.bundles</groupId>
-            <artifactId>org.apache.servicemix.bundles.spring-context-support</artifactId>
-            <version>${spring.version}</version>
-          </dependency>
-
-          <dependency>
-            <groupId>org.apache.servicemix.bundles</groupId>
-            <artifactId>org.apache.servicemix.bundles.spring-core</artifactId>
-            <version>${spring.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.servicemix.bundles</groupId>
-            <artifactId>org.apache.servicemix.bundles.spring-jdbc</artifactId>
-            <version>${spring.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.servicemix.bundles</groupId>
-            <artifactId>org.apache.servicemix.bundles.spring-tx</artifactId>
-            <version>${spring.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.servicemix.bundles</groupId>
-            <artifactId>org.apache.servicemix.bundles.spring-orm</artifactId>
-            <version>${spring.version}</version>
-          </dependency>
-
-          <dependency>
-            <groupId>org.apache.servicemix.bundles</groupId>
-            <artifactId>org.apache.servicemix.bundles.spring-aop</artifactId>
-            <version>${spring.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.servicemix.transaction</groupId>
-            <artifactId>org.apache.servicemix.transaction</artifactId>
-            <version>1.2.0</version>
-            <exclusions>
-              <exclusion>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-core</artifactId>
-              </exclusion>
-            </exclusions>
-          </dependency>
-
-          <dependency>
-            <groupId>com.jayway.jsonpath</groupId>
-            <artifactId>json-path</artifactId>
-            <version>2.0.0</version>
-          </dependency>
-
-          <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.3.1</version>
-          </dependency>
-
-          <dependency>
-            <groupId>org.apache.servicemix.bundles</groupId>
-            <artifactId>org.apache.servicemix.bundles.spring-aspects</artifactId>
-            <version>4.1.2.RELEASE_1</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.servicemix.bundles</groupId>
-            <artifactId>org.apache.servicemix.bundles.aspectj</artifactId>
-            <version>1.8.4_1</version>
-          </dependency>
-
-          <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.3</version>
-          </dependency>
-
-          <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>bootstrap</artifactId>
-            <version>3.1.1</version>
-          </dependency>
-
-          <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>jquery</artifactId>
-            <version>2.1.0-2</version>
-          </dependency>
-
-          <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.7.2</version>
-          </dependency>
-
-          <dependency>
-            <groupId>org.wisdom-framework.oauth2</groupId>
-            <artifactId>wisdom-oauth2-authenticator</artifactId>
-            <version>${wisdom-oauth2-authenticator.version}</version>
-          </dependency>
-
-          <dependency>
-            <groupId>org.wisdom-framework.oauth2</groupId>
-            <artifactId>wisdom-oauth2-controller</artifactId>
-            <version>${wisdom-oauth2-controller.version}</version>
-          </dependency>
-
-          <dependency>
-            <!-- slf4j binding used for tests -->
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-jcl</artifactId>
-            <version>1.7.6</version>
-          </dependency>
-
-          <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.11</version>
-            <scope>test</scope>
-          </dependency>
-        </dependencies>
-    </dependencyManagement>
-
-    <build>
+    <pluginManagement>
 
       <plugins>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.2</version>
+          <version>3.3</version>
           <configuration>
             <source>${java.version}</source>
             <target>${java.version}</target>
+            <testSource>${java.version}</testSource>
+            <testTarget>${java.version}</testTarget>
             <encoding>${project.build.sourceEncoding}</encoding>
           </configuration>
         </plugin>
+        <plugin>
+          <groupId>org.apache.felix</groupId>
+          <artifactId>maven-ipojo-plugin</artifactId>
+          <version>${ipojo.version}</version>
+        </plugin>
+
       </plugins>
 
-      <pluginManagement>
+    </pluginManagement>
 
-        <plugins>
+  </build>
 
-          <plugin>
-            <groupId>org.apache.felix</groupId>
-            <artifactId>maven-ipojo-plugin</artifactId>
-            <version>${ipojo.version}</version>
-          </plugin>
-
-        </plugins>
-
-      </pluginManagement>
-
-    </build>
-
-    <repositories>
-        <repository>
-            <id>oss-snapshot</id>
-            <name>oss-snapshot</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-        </repository>
-    </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>oss-snapshot</id>
-            <name>oss-snapshot</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-        </pluginRepository>
-    </pluginRepositories>
+  <repositories>
+    <repository>
+      <id>oss-snapshot</id>
+      <name>oss-snapshot</name>
+      <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+    </repository>
+  </repositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>oss-snapshot</id>
+      <name>oss-snapshot</name>
+      <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+    </pluginRepository>
+  </pluginRepositories>
 </project>

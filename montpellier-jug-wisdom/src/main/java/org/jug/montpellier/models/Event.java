@@ -1,23 +1,20 @@
 package org.jug.montpellier.models;
 
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.jug.montpellier.forms.annotations.ListView;
 import org.jug.montpellier.forms.annotations.Property;
 import org.jug.montpellier.forms.services.editors.extended.BigStringEditorService;
 import org.jug.montpellier.forms.services.editors.extended.DateEditorService;
 import org.jug.montpellier.forms.services.editors.extended.WebSiteUrlEditorService;
-import org.jug.montpellier.forms.services.editors.specific.MultiSpeakerEditorService;
-import org.jug.montpellier.forms.services.editors.specific.MultiTalkEditorService;
 import org.montpellierjug.store.jooq.tables.interfaces.IEvent;
 import org.montpellierjug.store.jooq.tables.interfaces.ISpeaker;
 import org.montpellierjug.store.jooq.tables.interfaces.ITalk;
-
-import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Created by manland on 26/04/15.

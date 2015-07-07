@@ -1,5 +1,7 @@
 package org.jug.montpellier.cartridges.speakers.services;
 
+import java.util.List;
+
 import org.apache.felix.ipojo.annotations.Component;
 import org.apache.felix.ipojo.annotations.Instantiate;
 import org.apache.felix.ipojo.annotations.Provides;
@@ -10,8 +12,6 @@ import org.montpellierjug.store.jooq.tables.daos.TalkDao;
 import org.montpellierjug.store.jooq.tables.interfaces.ISpeaker;
 import org.montpellierjug.store.jooq.tables.pojos.Talk;
 import org.wisdom.api.http.Result;
-
-import java.util.List;
 
 
 @Component

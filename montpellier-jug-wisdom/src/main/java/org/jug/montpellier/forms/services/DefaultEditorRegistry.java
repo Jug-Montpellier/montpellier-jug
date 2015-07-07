@@ -1,6 +1,14 @@
 package org.jug.montpellier.forms.services;
 
-import org.apache.felix.ipojo.annotations.*;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.felix.ipojo.annotations.Bind;
+import org.apache.felix.ipojo.annotations.Component;
+import org.apache.felix.ipojo.annotations.Instantiate;
+import org.apache.felix.ipojo.annotations.Invalidate;
+import org.apache.felix.ipojo.annotations.Provides;
+import org.apache.felix.ipojo.annotations.Unbind;
 import org.jug.montpellier.forms.apis.Editor;
 import org.jug.montpellier.forms.apis.EditorRegistry;
 import org.jug.montpellier.forms.apis.EditorService;
@@ -8,9 +16,6 @@ import org.jug.montpellier.forms.models.Property;
 import org.jug.montpellier.forms.services.editors.base.NotImplementedEditorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by Eric Taix on 08/03/2015.

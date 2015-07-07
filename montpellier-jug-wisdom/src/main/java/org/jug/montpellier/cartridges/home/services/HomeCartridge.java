@@ -4,8 +4,8 @@ import org.apache.felix.ipojo.annotations.Component;
 import org.apache.felix.ipojo.annotations.Instantiate;
 import org.apache.felix.ipojo.annotations.Provides;
 import org.apache.felix.ipojo.annotations.Requires;
-import org.jug.montpellier.core.api.Cartridge;
 import org.jug.montpellier.cartridges.home.controllers.HomeController;
+import org.jug.montpellier.core.api.Cartridge;
 import org.wisdom.api.router.Router;
 
 @Component

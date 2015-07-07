@@ -1,21 +1,19 @@
 package org.jug.montpellier.forms.services.editors.specific;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.jug.montpellier.forms.apis.Editor;
 import org.jug.montpellier.forms.apis.EditorService;
 import org.jug.montpellier.forms.models.PropertyValue;
 import org.jug.montpellier.forms.services.editors.base.BaseEditor;
 import org.montpellierjug.store.jooq.tables.daos.TalkDao;
-import org.montpellierjug.store.jooq.tables.interfaces.ISpeaker;
 import org.montpellierjug.store.jooq.tables.interfaces.ITalk;
 import org.wisdom.api.Controller;
 import org.wisdom.api.http.Renderable;
 import org.wisdom.api.templates.Template;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Created by fteychen on 04/06/2015.

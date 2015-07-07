@@ -19,12 +19,8 @@
  */
 package sample;
 
-import org.jsoup.nodes.Document;
 import org.junit.Test;
-import org.wisdom.test.http.HttpResponse;
 import org.wisdom.test.parents.WisdomBlackBoxTest;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * A black box test checking that the Welcome page is correctly serve on "/".

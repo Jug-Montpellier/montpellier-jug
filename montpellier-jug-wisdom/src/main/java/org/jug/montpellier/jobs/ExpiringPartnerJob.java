@@ -1,6 +1,11 @@
 package org.jug.montpellier.jobs;
 
-import com.google.common.collect.ImmutableMap;
+import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
 import org.apache.felix.ipojo.annotations.Component;
 import org.apache.felix.ipojo.annotations.Instantiate;
 import org.apache.felix.ipojo.annotations.Provides;
@@ -17,11 +22,7 @@ import org.wisdom.api.configuration.ApplicationConfiguration;
 import org.wisdom.api.scheduler.Scheduled;
 import org.wisdom.api.templates.Template;
 
-import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
+import com.google.common.collect.ImmutableMap;
 
 /**
  * Created by fteychene on 17/06/2015.

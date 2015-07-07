@@ -1,12 +1,17 @@
 package org.jug.montpellier.forms.services.introspector;
 
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.apache.felix.ipojo.annotations.Component;
 import org.apache.felix.ipojo.annotations.Instantiate;
 import org.apache.felix.ipojo.annotations.Provides;
 import org.apache.felix.ipojo.annotations.Requires;
 import org.jug.montpellier.forms.annotations.ListView;
 import org.jug.montpellier.forms.annotations.Property;
-import org.jug.montpellier.forms.apis.Editor;
 import org.jug.montpellier.forms.apis.EditorRegistry;
 import org.jug.montpellier.forms.apis.Introspector;
 import org.jug.montpellier.forms.models.ListViewColumn;
@@ -14,12 +19,6 @@ import org.jug.montpellier.forms.models.PropertyValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wisdom.api.Controller;
-
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by Eric Taix on 28/03/15.

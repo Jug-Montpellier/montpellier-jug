@@ -1,11 +1,10 @@
 package org.jug.montpellier.forms.services.introspector;
 
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.HashMap;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.mock;
+import org.junit.Test;
 
 /**
  * Created by Eric Taix on 04/06/15.

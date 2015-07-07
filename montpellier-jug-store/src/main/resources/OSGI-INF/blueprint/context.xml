@@ -50,6 +50,12 @@
     </property>
   </bean>
 
+  <service ref="config" interface="org.jooq.Configuration">
+    <service-properties>
+      <entry key="name" value="main"/>
+    </service-properties>
+  </service>
+
   <service ref="dsl" interface="org.jooq.DSLContext"/>
 
   <bean id="answerDao" class="org.montpellierjug.store.jooq.tables.daos.AnswerDao">

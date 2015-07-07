@@ -1,19 +1,16 @@
 package org.jug.montpellier.models;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.jug.montpellier.forms.annotations.ListView;
 import org.jug.montpellier.forms.annotations.Property;
 import org.jug.montpellier.forms.services.editors.extended.BigStringEditorService;
 import org.jug.montpellier.forms.services.editors.specific.EventChooserEditorService;
 import org.jug.montpellier.forms.services.editors.specific.SpeakerChooserEditorService;
-import org.montpellierjug.store.jooq.tables.interfaces.IEvent;
 import org.montpellierjug.store.jooq.tables.interfaces.ISpeaker;
 import org.montpellierjug.store.jooq.tables.interfaces.ITalk;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Created by Eric Taix on 21/03/2015.

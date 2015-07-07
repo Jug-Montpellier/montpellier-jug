@@ -20,15 +20,7 @@
 package sample;
 
 import org.junit.Test;
-import org.wisdom.api.http.Result;
-import org.wisdom.test.parents.Action;
-import org.wisdom.test.parents.Invocation;
 import org.wisdom.test.parents.WisdomTest;
-
-import javax.inject.Inject;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.wisdom.test.parents.Action.action;
 
 /**
  * An in-container test checking your application while it's executing.

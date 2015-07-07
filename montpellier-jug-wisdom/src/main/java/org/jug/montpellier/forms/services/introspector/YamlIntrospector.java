@@ -1,26 +1,32 @@
 package org.jug.montpellier.forms.services.introspector;
 
-import org.apache.felix.ipojo.annotations.*;
-import org.jug.montpellier.forms.apis.EditorService;
-import org.jug.montpellier.forms.models.Property;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
-import org.jug.montpellier.forms.apis.Editor;
+import org.apache.felix.ipojo.annotations.Component;
+import org.apache.felix.ipojo.annotations.Context;
+import org.apache.felix.ipojo.annotations.Instantiate;
+import org.apache.felix.ipojo.annotations.Provides;
+import org.apache.felix.ipojo.annotations.Requires;
 import org.jug.montpellier.forms.apis.EditorRegistry;
+import org.jug.montpellier.forms.apis.EditorService;
 import org.jug.montpellier.forms.apis.Introspector;
 import org.jug.montpellier.forms.models.ListViewColumn;
+import org.jug.montpellier.forms.models.Property;
 import org.jug.montpellier.forms.models.PropertyValue;
 import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wisdom.api.Controller;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Field;
-import java.net.URL;
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.stream.Collectors;
 
 /**
  * Created by Eric Taix on 01/04/15.

@@ -1,11 +1,11 @@
 package org.jug.montpellier.forms.apis;
 
+import java.io.IOException;
+import java.util.List;
+
 import org.jug.montpellier.forms.models.ListViewColumn;
 import org.jug.montpellier.forms.models.PropertyValue;
 import org.wisdom.api.Controller;
-
-import java.io.IOException;
-import java.util.List;
 
 /**
  * Created by Eric Taix on 28/03/15.

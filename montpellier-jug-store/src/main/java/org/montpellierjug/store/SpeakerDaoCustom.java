@@ -1,5 +1,7 @@
 package org.montpellierjug.store;
 
+import java.util.List;
+
 import org.apache.felix.ipojo.annotations.Component;
 import org.apache.felix.ipojo.annotations.Instantiate;
 import org.apache.felix.ipojo.annotations.Provides;
@@ -7,9 +9,6 @@ import org.apache.felix.ipojo.annotations.Requires;
 import org.jooq.DSLContext;
 import org.montpellierjug.store.jooq.Tables;
 import org.montpellierjug.store.jooq.tables.pojos.Speaker;
-import org.montpellierjug.store.jooq.tables.records.SpeakerRecord;
-
-import java.util.List;
 
 /**
  * Created by chelebithil on 26/04/15.

@@ -19,6 +19,10 @@
  */
 package org.jug.montpellier.cartridges.home.controllers;
 
+import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.List;
+
 import org.apache.felix.ipojo.annotations.Requires;
 import org.jooq.DSLContext;
 import org.jug.montpellier.core.api.JugSupport;
@@ -32,10 +36,6 @@ import org.wisdom.api.annotations.View;
 import org.wisdom.api.http.HttpMethod;
 import org.wisdom.api.http.Result;
 import org.wisdom.api.templates.Template;
-
-import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.List;
 
 @Controller
 @Path("/")
