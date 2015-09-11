@@ -1,8 +1,8 @@
 package org.jug.montpellier.core.api;
 
-import org.montpellierjug.store.jooq.tables.pojos.Yearpartner;
-
 import java.util.List;
+
+import org.montpellierjug.store.jooq.tables.pojos.Yearpartner;
 
 /**
  * Created by manland on 16/03/15.

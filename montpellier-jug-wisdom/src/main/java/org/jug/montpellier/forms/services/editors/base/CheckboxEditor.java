@@ -1,15 +1,15 @@
 package org.jug.montpellier.forms.services.editors.base;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.jug.montpellier.forms.apis.Editor;
 import org.jug.montpellier.forms.apis.EditorService;
 import org.jug.montpellier.forms.models.PropertyValue;
 import org.wisdom.api.Controller;
 import org.wisdom.api.http.Renderable;
 import org.wisdom.api.templates.Template;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by fteychene on 02/06/2015.

@@ -5,13 +5,8 @@ import org.apache.felix.ipojo.annotations.Instantiate;
 import org.apache.felix.ipojo.annotations.Provides;
 import org.jug.montpellier.forms.apis.Editor;
 import org.jug.montpellier.forms.apis.EditorService;
-import org.jug.montpellier.forms.models.PropertyValue;
-import org.wisdom.api.Controller;
 import org.wisdom.api.annotations.View;
-import org.wisdom.api.http.Renderable;
 import org.wisdom.api.templates.Template;
-
-import java.util.List;
 
 /**
  * Created by fteychene on 02/06/2015.

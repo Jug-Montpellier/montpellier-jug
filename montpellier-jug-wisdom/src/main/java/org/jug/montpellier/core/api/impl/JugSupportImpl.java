@@ -1,6 +1,18 @@
 package org.jug.montpellier.core.api.impl;
 
-import org.apache.felix.ipojo.annotations.*;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
+
+import org.apache.felix.ipojo.annotations.Bind;
+import org.apache.felix.ipojo.annotations.Component;
+import org.apache.felix.ipojo.annotations.Instantiate;
+import org.apache.felix.ipojo.annotations.Provides;
+import org.apache.felix.ipojo.annotations.Requires;
+import org.apache.felix.ipojo.annotations.Unbind;
 import org.jooq.DSLContext;
 import org.jug.montpellier.core.api.Cartridge;
 import org.jug.montpellier.core.api.JugSupport;
@@ -13,13 +25,6 @@ import org.montpellierjug.store.jooq.tables.pojos.Talk;
 import org.montpellierjug.store.jooq.tables.pojos.Yearpartner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.TreeSet;
-import java.util.stream.Collectors;
 
 /**
  * Created by Eric Taix on 22/03/15.

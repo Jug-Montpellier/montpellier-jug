@@ -1,11 +1,15 @@
 package org.jug.montpellier.forms.services;
 
-import com.google.common.collect.Maps;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.apache.felix.ipojo.annotations.Component;
 import org.apache.felix.ipojo.annotations.Instantiate;
 import org.apache.felix.ipojo.annotations.Provides;
 import org.apache.felix.ipojo.annotations.Requires;
-import org.jug.montpellier.forms.annotations.ListView;
 import org.jug.montpellier.forms.apis.IntrospectorRegistry;
 import org.jug.montpellier.forms.models.ListViewCell;
 import org.jug.montpellier.forms.models.ListViewColumn;
@@ -18,13 +22,7 @@ import org.wisdom.api.annotations.View;
 import org.wisdom.api.http.Renderable;
 import org.wisdom.api.templates.Template;
 
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import com.google.common.collect.Maps;
 
 /**
  * Created by Eric Taix on 24/03/15.

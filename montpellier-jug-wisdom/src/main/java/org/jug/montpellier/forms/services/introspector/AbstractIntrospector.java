@@ -1,11 +1,11 @@
 package org.jug.montpellier.forms.services.introspector;
 
+import java.lang.reflect.Field;
+
 import org.jug.montpellier.forms.apis.Editor;
 import org.jug.montpellier.forms.apis.EditorRegistry;
 import org.jug.montpellier.forms.models.PropertyValue;
 import org.wisdom.api.Controller;
-
-import java.lang.reflect.Field;
 
 /**
  * Created by Eric Taix on 04/06/15.

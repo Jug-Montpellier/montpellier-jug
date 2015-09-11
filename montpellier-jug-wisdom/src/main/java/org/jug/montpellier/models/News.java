@@ -1,19 +1,16 @@
 package org.jug.montpellier.models;
 
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.jug.montpellier.forms.annotations.ListView;
 import org.jug.montpellier.forms.annotations.Property;
 import org.jug.montpellier.forms.services.editors.extended.BigStringEditorService;
 import org.jug.montpellier.forms.services.editors.extended.DateEditorService;
 import org.montpellierjug.store.jooq.tables.interfaces.INews;
-import org.montpellierjug.store.jooq.tables.interfaces.ITalk;
-
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @ListView(title = "News", labels = {"Title", "Date"}, columns = {"title", "date"})
 public class News implements INews {

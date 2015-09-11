@@ -1,7 +1,11 @@
 package org.jug.montpellier.cartridges.events.controller;
 
-import com.google.common.reflect.TypeToken;
-import com.jayway.jsonpath.JsonPath;
+import java.io.IOException;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import org.apache.aries.util.io.IOUtils;
 import org.apache.felix.ipojo.annotations.Requires;
 import org.apache.http.Header;
@@ -13,24 +17,15 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.jug.montpellier.cartridges.events.services.EventBriteService;
-import org.jug.montpellier.cartridges.events.services.Profile;
 import org.wisdom.api.DefaultController;
 import org.wisdom.api.annotations.Controller;
 import org.wisdom.api.annotations.Path;
 import org.wisdom.api.annotations.PathParameter;
 import org.wisdom.api.annotations.Route;
 import org.wisdom.api.annotations.scheduler.Async;
-import org.wisdom.api.cache.Cache;
 import org.wisdom.api.http.HttpMethod;
 import org.wisdom.api.http.Result;
 import org.wisdom.api.http.Status;
-
-import java.io.IOException;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by cheleb on 17/06/15.

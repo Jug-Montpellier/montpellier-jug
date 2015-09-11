@@ -1,13 +1,13 @@
 package org.jug.montpellier.core.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.jug.montpellier.core.api.JugSupport;
 import org.wisdom.api.DefaultController;
 import org.wisdom.api.http.Renderable;
 import org.wisdom.api.http.Result;
 import org.wisdom.api.templates.Template;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class JugController extends DefaultController {
 

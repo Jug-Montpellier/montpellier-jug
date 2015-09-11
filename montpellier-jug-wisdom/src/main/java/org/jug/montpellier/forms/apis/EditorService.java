@@ -1,7 +1,5 @@
 package org.jug.montpellier.forms.apis;
 
-import org.jug.montpellier.forms.apis.Editor;
-
 /**
  * Created by Eric Taix on 08/03/2015.
  */
